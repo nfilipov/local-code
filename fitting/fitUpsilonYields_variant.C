@@ -79,7 +79,7 @@ pair<double, double> ConfidencInterval(float, RooRealVar *fnll, RooDataSet *data
 //the reason for this is the number of arguments one can append to RooDataSet (max. is 8)
 //
 void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: pp@7TeV data ; 2: pp@2.76TeV; 3: PbPb@276
-			      int choseFitParams = 2, //0: (1s, 2s, 3s) 1: (1s, 2s/1s; 3s/1s); 2: (1S, (2s+3s)/1s)
+			      int choseFitParams = 0, //0: (1s, 2s, 3s) 1: (1s, 2s/1s; 3s/1s); 2: (1S, (2s+3s)/1s)
 			      int bkgdModel      = 3, //1:LS erf*exp + pol2; 2:LS RookeyPdf + pol2; 3:erf*exp; 4:pol2; 5:erf*exp+pol2 6:pol3
 			      int fixFSR         = 1,
 			      int fixSigma1      = 0, // 0 free; 1: fix
@@ -124,9 +124,10 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
       binw=0.05;
       break;
     case 3://PbPb @ 2.76TeV regit
-      finput   = "../dimuonTree_upsiMiniTree_aa276tev_regitreco_glbglb_Runa_trigBit1_allTriggers0_pt4.root"; // cent 0-40 "cm"
+       finput   = "../dimuonTree_upsiMiniTree_aa276tev_regitreco_glbglb_Runa_trigBit1_allTriggers0_pt4.root"; // cent 0-40 "cm"
       // finput = "../dimuonTree_upsiMiniTree_AA2p76tev_ptmu3_july09_Run2011-2011_trigBit1_allTriggers0.root";// cent0-40 "td"
       // finput = "../dimuonTree_upsiMiniTree_AA276tevC0100_regit_ptmu4_Run210498-211631_trigBit1_allTriggers0.root"; // cent0-40 "nf"
+       // finput = "../dimuonTree_upsiMiniTree_AA2p76tev_ptmuSpecial_nov25_2013_trigBit1_allTriggers1_testNoCut.root"; // no cuts !
       break;
     case 4://PbPb @ 2.76TeV pp reco trk-trk
       // finput   = "../dimuonTree_upsiMiniTree_aa276tev_50100ppreco__Runa_trigBit1_allTriggers0_pt4.root";
@@ -185,8 +186,8 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
   // output file names
   if(narrowMass)
     {
-      mass_l =  8.5;
-      mass_h = 11.5;
+      mass_l =  8.0;
+      mass_h = 14.0;
       TString figName_(Form("%s_%s_cent%d%d_bkgModel%d_muonEta%.2f%.2f_dimuPt%.2f%.2f_trkRot%d_constrain%d_%d_%d_ref%d_mass8p511p5",
 			    outFilePrefix,choseSampleCase,centMin,centMax,bkgdModel,
 			    muonEtaCut_min,muonEtaCut_max,dimuPtMin,dimuPtMax,doTrkRot,doConstrainFit,fixFSR,fixSigma1,useRef)); // output file names 
@@ -294,13 +295,13 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
   RooFormulaVar *mean3S = new RooFormulaVar("mean3S","@0*@1", RooArgList(*mean,*rat3));
 
   //detector resolution ?? where is this coming from?
-  RooRealVar    *sigma1  = new RooRealVar("sigma1","#sigma_{1S}",0.092,0.045,0.3); // 
+  RooRealVar    *sigma1  = new RooRealVar("sigma1","#sigma_{1S}",0.092,0.04,0.3); // 
   RooFormulaVar *sigma1S = new RooFormulaVar("sigma1S","@0"   ,RooArgList(*sigma1));
   RooFormulaVar *sigma2S = new RooFormulaVar("sigma2S","@0*@1",RooArgList(*sigma1,*rat2));
   RooFormulaVar *sigma3S = new RooFormulaVar("sigma3S","@0*@1",RooArgList(*sigma1,*rat3));
   
   /// to describe final state radiation tail on the left of the peaks
-  RooRealVar *alpha  = new RooRealVar("alpha","tail shift",0.1,40);    // MC 5tev 1S pol2 
+  RooRealVar *alpha  = new RooRealVar("alpha","tail shift",1.6,0.101,40);    // MC 5tev 1S pol2 
   RooRealVar *npow   = new RooRealVar("npow","power order",1.0000001,100);    // MC 5tev 1S pol2 
 
   // ratios fit paramters:1 (pp@7.tev), 2 (pp@2.76TeV), 3(PbPb 2.76TeV)
@@ -385,7 +386,10 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
 
   // *************************************************** free param in the fit
   int nt = 10000;
+  int nt = data0_ap->sumEntries();
   RooRealVar *nsig1f   = new RooRealVar("N_{#Upsilon(1S)}","nsig1S",nt*0.25,0,10*nt);
+  // nsig1f->setVal(0);
+  // nsig1f->setConstant(kTRUE);
   switch (choseFitParams)
     {
     case 0://use the YIELDs of 2S and 3S as free parameters
@@ -422,7 +426,7 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
       break;
     }  
  double NEvts;
- NEvts = data->sumEntries());
+ NEvts = data->sumEntries();
   // bkg Chebychev
   RooRealVar *nbkgd   = new RooRealVar("n_{Bkgd}","nbkgd",0,NEvts);
   RooRealVar *bkg_a1  = new RooRealVar("a1_bkg", "bkg_{a1}", 0, -5, 5);
@@ -458,14 +462,92 @@ RooFormulaVar *nResidualbkgd = new RooFormulaVar("NResidualBkg","@0-@1",
  
 
 // *************************************************** bkgModel
-RooRealVar turnOn("turnOn","turnOn" , 7., 14.);
-RooRealVar width("width","width"    , 0.5,20.);// MB 2.63
-RooRealVar decay("decay","decay"    , 0., 10.);// MB: 3.39
+RooRealVar turnOn("turnOn","turnOn" , 1.1., 18);
+RooRealVar width("width","width"    , 0.5,40.);// MB 2.63
+RooRealVar decay("decay","decay"    , 0., 8.9);// MB: 3.39
+ if(choseSample==3)
+   {
+     if(dimuPtMin==2.5 && dimuPtMax==5.0)
+       {
+	 //width.setVal(4.2);
+	 if(choseFitParams==0) alpha.setVal(1.14);
+       }
+     if(dimuPtMin==5.0 && dimuPtMax==8.0)
+       {
+	 RooRealVar width("width","width"    , 10, 14. );// MB 2.63
+       }
 
-width.setConstant(false);
-decay.setConstant(false);
-turnOn.setConstant(false);
-
+     if(dimuPtMin==0.0 && dimuPtMax==20.0)
+       {
+	 alpha.setVal(1.3);
+       }
+    if(dimuPtMin==12.0 && dimuPtMax==20.0)
+       {
+	 alpha.setVal(1.2);
+	 width.setVal(11.6);
+       }
+    if(dimuPtMin==20.0 && dimuPtMax==50.0)
+       {
+	 RooRealVar turnOn("turnOn","turnOn" , 1.1, 12);
+	 RooRealVar width("width","width"    , 0.5, 40. );// MB 2.63
+	 RooRealVar decay("decay","decay"    , 0. , 9.);// MB: 3.39
+	 //  decay.setVal(12);
+       }
+    if(dimuPtMin==6.5 && dimuPtMax==10.)
+      {
+	RooRealVar turnOn("turnOn","turnOn" , 0, 13);
+	RooRealVar width("width","width"    , 0.5, 14. );// MB 2.63
+	RooRealVar decay("decay","decay"    , 0. , 9.);// MB: 3.39
+		 if(choseFitParams==0) 	RooRealVar decay("decay","decay"    , 0. , 12.);// MB: 3.39
+      }
+   }
+ if(choseSample==7)
+   {
+     if(dimuPtMin==0.0 && dimuPtMax==20.0)
+       {
+	 alpha.setVal(1.3);
+       }
+     if(dimuPtMin==5.0 && dimuPtMax==8.0)
+       {
+	 //	 alpha.setVal(1.33);
+       }
+    if(dimuPtMin==8.0 && dimuPtMax==12.0)
+       {
+	 RooRealVar width("width","width"    , 10, 14. );// MB 2.63
+       }
+     if(dimuPtMin==12.)
+       {
+	 alpha.setVal(1.07);
+       }
+     if(dimuPtMin==10. && dimuPtMax==20.)
+       {
+	 width.setVal(1.9);
+	 //turnOn.setVal(7.1);
+       }
+    if(dimuPtMin==20.0 && dimuPtMax==50.0)
+       {
+	 RooRealVar turnOn("turnOn","turnOn" , 1.1, 16);
+	 RooRealVar width("width","width"    , 1.3, 40. );// MB 2.63
+	 RooRealVar decay("decay","decay"    , 0. , 9.);// MB: 3.39
+	 //  decay.setVal(12);
+	 if(choseFitParams==0){
+	 RooRealVar *nsig1f   = new RooRealVar("N_{#Upsilon(1S)}","nsig1S",0,0.35*nt);
+	 RooRealVar *nsig2f   = new RooRealVar("N_{#Upsilon(2S)}","nsig2S",nt*0.25,0,0.25*nt);
+	 RooRealVar *nsig3f   = new RooRealVar("N_{#Upsilon(3S)}","nsig3S",nt*0.25,0,0.25*nt);
+	   // nsig2f.setVal(40);
+	   // nsig3f.setVal(30);
+	 }
+	 if(choseFitParams==1)
+	   {
+	     f2Svs1S.setVal(0.6);
+	     f3Svs1S.setVal(0.4);
+	   }
+       }
+   }
+ width.setConstant(false);
+ decay.setConstant(false);
+ turnOn.setConstant(false);
+ 
 RooGaussian* turnOn_constr;
 RooGaussian* width_constr;
 RooGaussian* decay_constr;
@@ -557,7 +639,8 @@ switch (bkgdModel)
     cout<<"Donno what you are talking about! Pick another fit option!"<<endl;
     break;
   }
-  
+// mass->setRange("low",7,9);
+// mass->setRange("hi",9,14);
   //###### the nominal fit with default pdf 
   RooFitResult* fit_2nd;// fit results
   RooAbsPdf  *pdf; // nominal PDF
@@ -574,8 +657,8 @@ switch (bkgdModel)
   else 
     {
 RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
-						   RooArgList(*sig1S,*sig2S,*sig3S,*pdf_combinedbkgd),
- 						   RooArgList(*nsig1f,*nsig2f,*nsig3f,*nbkgd));
+					     RooArgList(*sig1S,*sig2S,*sig3S,*pdf_combinedbkgd),
+					     RooArgList(*nsig1f,*nsig2f,*nsig3f,*nbkgd));
  fit_2nd       = pdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),Minos(doMinos));
     }
 
@@ -624,7 +707,8 @@ RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
     }
   //pdf->plotOn(frame,Components("pdf_combinedbkgd"),Name("theBkg"),LineStyle(kDashed));// total bkg, blue
   // need this re-plotting, so the pulls pick the right fit
-  pdf->plotOn(frame,Name("thePdf")); // signal + bkg pdf
+ data->plotOn(frame,Name("theData"),MarkerSize(0.8)); 
+ pdf->plotOn(frame,Name("thePdf")); // signal + bkg pdf
   //----------------------------------------------------------------------  
    frame->SetTitle( "" );
   frame->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
@@ -665,7 +749,7 @@ RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
   latex1.DrawLatex(0.15,1.-0.05*2.5,Form("%s",choseSampleLumi[choseSample])); 
   if(choseSample!=1 && choseSample!=2 && choseSample!=7) latex1.DrawLatex(0.15,1.-0.05*6.5,Form("Cent. %d-%d%%",centMin,centMax));
   latex1.DrawLatex(0.15,1.-0.05*3.5,Form("|y| < 2.4")); 
-  latex1.DrawLatex(0.15,1.-0.05*4.5,Form("p_{T}^{#mu} > %.1f GeV/c",muonpTcut));
+  // latex1.DrawLatex(0.15,1.-0.05*4.5,Form("p_{T}^{#mu} > %.1f GeV/c",muonpTcut));
   latex1.DrawLatex(0.15,1.-0.05*5.5,Form("%.1f < p_{T}^{#Upsilon} < %.1f",dimuPtMin,dimuPtMax));
   cm.cd(0);
   TPad *pPad2 = new TPad("pPad2","pPad2",0.05,0.05,0.95,0.35);
@@ -725,7 +809,7 @@ RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
   // Print fit results 
   cout << endl << "figure name: "<< figName_ << endl;
   cout << "the nominal fit with the default pdf " << endl ;
-  cout<<"p-value = "<< TMath::Prob(UnNormChi2,Dof)<<endl;
+  //cout<<"p-value = "<< TMath::Prob(UnNormChi2,Dof)<<endl;
 
   // ------ calculate the single yields
   // if (choseSample<3)

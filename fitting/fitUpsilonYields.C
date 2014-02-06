@@ -135,6 +135,8 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
       break;
     case 3://PbPb @ 2.76TeV regit
       finput   = "../dimuonTree_upsiMiniTree_aa276tev_regitreco_glbglb_Runa_trigBit1_allTriggers0_pt4.root"; // cent 0-40 "cm"
+      //finput = "./dimuonTree_largeAccCut_test24112013_merged.root";//new acc cut
+      //finput = "../dimuonTree_upsiMiniTree_AA2p76tev_ptmuSpecial_nov25_2013_trigBit1_allTriggers1_testNoCut.root"; //no cuts !!!
       // finput = "../dimuonTree_upsiMiniTree_AA2p76tev_ptmu3_july09_Run2011-2011_trigBit1_allTriggers0.root";// cent0-40 "td"
       // finput = "../dimuonTree_upsiMiniTree_AA276tevC0100_regit_ptmu4_Run210498-211631_trigBit1_allTriggers0.root"; // cent0-40 "nf"
       break;
@@ -151,7 +153,8 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
       finput   = "../dimuonTree_HI2011_fulldataset_trkRot.root";
       break;
     case 7://pp @ 2.76TeV
-      finput   = "../dimuonTree_upsiMiniTree_pp276tev_5p41_Run211739-211831_trigBit1_allTriggers0_pt4.root";
+      // finput   = "../dimuonTree_upsiMiniTree_pp276tev_5p41_Run211739-211831_trigBit1_allTriggers0_pt4.root";
+      finput   = "../dimuonTree_upsiMiniTree_pp276tev_5p41_ptmu4_Run211739-211831_GlbGlb_trigBit1_allTriggers0.root";
       break;
     default:
       cout<<"You don't know what you are doing! Pick one of the available datasets in the choseSampleCases[] array"<<endl;
@@ -426,9 +429,9 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
     case 2:// do (2s+3s)/1s
       RooRealVar *f2Svs1S   = new RooRealVar("R_{#frac{2S}{1S}}","f2Svs1S",0.26,-0.1,1.0);
       RooRealVar *f23vs1S   = new RooRealVar("R_{#frac{2S+3S}{1S}}","f23vs1S",0.45,-0.1,1);
-      RooFormulaVar *nsig2f = new RooFormulaVar("N2S","@0*@1", RooArgList(*fsig1S,*f2Svs1S));
+      RooFormulaVar *nsig2f = new RooFormulaVar("N2S","@0*@1", RooArgList(*nsig1f,*f2Svs1S));
       RooFormulaVar *nsig3f = new RooFormulaVar("N3S","@0*@2-@0*@1", 
- 						RooArgList(*fsig1S,*f2Svs1S,*f23vs1S));
+ 						RooArgList(*nsig1f,*f2Svs1S,*f23vs1S));
       break;
     case 3://do 2s/1s, 3s/1s, 3s/2s
       RooRealVar *f2Svs1S   = new RooRealVar("R_{#frac{2S}{1S}}","f2Svs1S",0.26,-0.1,1.0);
@@ -446,7 +449,7 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
 
     }  
  double NEvts;
- NEvts = data->sumEntries());
+ NEvts = data->sumEntries();
   // bkg Chebychev
   RooRealVar *nbkgd   = new RooRealVar("n_{Bkgd}","nbkgd",0,NEvts);
   RooRealVar *bkg_a1  = new RooRealVar("a1_{bkg}", "bkg_{a1}", 0, -2, 2);

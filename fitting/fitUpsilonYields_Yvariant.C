@@ -133,9 +133,10 @@ void fitUpsilonYields_Yvariant(int choseSample    = 3, //Input data sample.  1: 
       binw=0.05;
       break;
     case 3://PbPb @ 2.76TeV regit
-      finput   = "../dimuonTree_upsiMiniTree_aa276tev_regitreco_glbglb_Runa_trigBit1_allTriggers0_pt4.root"; // cent 0-40 "cm"
+        finput   = "../dimuonTree_upsiMiniTree_aa276tev_regitreco_glbglb_Runa_trigBit1_allTriggers0_pt4.root"; // cent 0-40 "cm"
       // finput = "../dimuonTree_upsiMiniTree_AA2p76tev_ptmu3_july09_Run2011-2011_trigBit1_allTriggers0.root";// cent0-40 "td"
       // finput = "../dimuonTree_upsiMiniTree_AA276tevC0100_regit_ptmu4_Run210498-211631_trigBit1_allTriggers0.root"; // cent0-40 "nf"
+      //finput = "../dimuonTree_upsiMiniTree_AA2p76tev_ptmuSpecial_nov25_2013_trigBit1_allTriggers1_testNoCut.root"; //no cuts !!!
       break;
     case 4://PbPb @ 2.76TeV pp reco trk-trk
       // finput   = "../dimuonTree_upsiMiniTree_aa276tev_50100ppreco__Runa_trigBit1_allTriggers0_pt4.root";
@@ -188,8 +189,8 @@ void fitUpsilonYields_Yvariant(int choseSample    = 3, //Input data sample.  1: 
   // output file names
   if(narrowMass)
     {
-      mass_l =  8.5;
-      mass_h = 11.5;
+      mass_l =  8.0;
+      mass_h = 14.0;
       TString figName_(Form("%s_%s_cent%d%d_bkgModel%d_muonEta%.2f%.2f_dimuY%.2f%.2f_trkRot%d_constrain%d_%d_%d_ref%d_mass8p511p5",
 			    outFilePrefix,choseSampleCase,centMin,centMax,bkgdModel,
 			    muonEtaMin,muonEtaMax,upsYCut_min,upsYCut_max,doTrkRot,doConstrainFit,fixFSR,fixSigma1,useRef)); // output file names 
@@ -308,8 +309,8 @@ void fitUpsilonYields_Yvariant(int choseSample    = 3, //Input data sample.  1: 
   RooFormulaVar *sigma3S = new RooFormulaVar("sigma3S","@0*@1",RooArgList(*sigma1,*rat3));
   
   /// to describe final state radiation tail on the left of the peaks
-  RooRealVar *alpha  = new RooRealVar("alpha","tail shift",0.1,40);    // MC 5tev 1S pol2 
-  RooRealVar *npow   = new RooRealVar("npow","power order",1.000001,100);    // MC 5tev 1S pol2 
+  RooRealVar *alpha  = new RooRealVar("alpha","tail shift",1.626,0.1,10);    // MC 5tev 1S pol2 
+  RooRealVar *npow   = new RooRealVar("npow","power order",2.3,1.000001,100);    // MC 5tev 1S pol2 
 
   // ratios fit paramters:1 (pp@7.tev), 2 (pp@2.76TeV), 3(PbPb 2.76TeV)
   //no. all values except last column come from AN2011-455-v9
@@ -428,9 +429,9 @@ void fitUpsilonYields_Yvariant(int choseSample    = 3, //Input data sample.  1: 
       cout<<"Make a pick from choseFitParams!!!"<<endl;
       break;
 
-    }  
+    }
  double NEvts;
- NEvts = data->sumEntries());
+ NEvts = data0_ap->sumEntries());
   // bkg Chebychev
 RooRealVar *nbkgd   = new RooRealVar("nBkgd","nbkgd",0,NEvts);
   RooRealVar *bkg_a1  = new RooRealVar("a1_bkg", "bkg_{a1}", 0, -2, 2);
@@ -465,10 +466,56 @@ RooRealVar *nbkgd   = new RooRealVar("nBkgd","nbkgd",0,NEvts);
  
 
  // *************************************************** bkgModel
-  RooRealVar turnOn("turnOn","turnOn", 7.,14.);
-  RooRealVar width("width","width",0.5, 20.);// MB 2.63
-  RooRealVar decay("decay","decay",0, 10.);// MB: 3.39
-
+  RooRealVar turnOn("turnOn","turnOn", 0.,20.);
+  RooRealVar width("width","width",0.6, 20.);// MB 2.63
+  RooRealVar decay("decay","decay",0, 15.);// MB: 3.39
+if(dimuYMin==0.0 && dimuYMax==0.4)
+  {
+      width.setVal(1.22);
+    RooRealVar decay("decay","decay",0, 9.);// MB: 3.39
+  }
+if(dimuYMin==0.0 && dimuYMax== 1.2 && choseSample==3)
+  {
+    alpha.setVal(1.6);
+  }
+if(dimuYMin==0.0 && dimuYMax==2.4)
+  {
+    width.setVal(1.48);
+    alpha.setVal(1.29);
+    //  turnOn.setVal(8.0);
+  }
+if(dimuYMin==0.4)
+  {
+    width.setVal(1.96);
+  }
+if(dimuYMin==0.7)
+  {
+    width.setVal(1.8);
+  }
+if(dimuYMin==1.0)
+  {
+    // alpha.setVal(4.9);
+    // width.setVal(2.0);
+    // //   turnOn.setVal(7.76);
+  }
+if(dimuYMin==1.2)
+  {
+    width.setVal(0.91);
+    //   turnOn.setVal(8.2); 
+  }
+if(dimuYMin==1.5)
+  {
+    width.setVal(0.63);
+  }
+if(choseSample==7)
+  {
+    if(dimuYMin==0.0 && dimuYMax==2.4)
+      {
+	turnOn.setVal(8.6);
+      }
+    else { RooRealVar decay("decay","decay",0, 15.);}// MB: 3.39
+  
+  }
   width.setConstant(false);
   decay.setConstant(false);
   turnOn.setConstant(false);
@@ -629,7 +676,8 @@ RooRealVar *nbkgd   = new RooRealVar("nBkgd","nbkgd",0,NEvts);
     }
   //pdf->plotOn(frame,Components("pdf_combinedbkgd"),Name("theBkg"),LineStyle(kDashed));// total bkg, blue
   // need this re-plotting, so the pulls pick the right fit
-  pdf->plotOn(frame,Name("thePdf")); // signal + bkg pdf
+ data->plotOn(frame,Name("theData"),MarkerSize(0.8)); 
+ pdf->plotOn(frame,Name("thePdf")); // signal + bkg pdf
 ////----------  
    frame->SetTitle( "" );
   frame->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
@@ -657,26 +705,43 @@ RooRealVar *nbkgd   = new RooRealVar("nBkgd","nbkgd",0,NEvts);
   // -------------------------------------- plot pulls
   TCanvas cm("cm","cm");
   cm.cd();
-  TPad *pPad1 = new TPad("pPad1","pPad1",0.05,0.35,0.95,0.97);
-  pPad1->SetBottomMargin(0.00);
+if(!plotpars){ TPad *pPad1 = new TPad("pPad1","pPad1",0.05,0.05,0.95,0.95);}
+if(plotpars){ TPad *pPad1 = new TPad("pPad1","pPad1",0.05,0.35,0.95,0.97);
+  pPad1->SetBottomMargin(0.00);}
   pPad1->Draw();
   pPad1->cd();
   if(plotpars) 
-       pdf->paramOn(frame,Layout(0.15,0.6,0.4),Layout(0.6,0.935,0.97));
+    pdf->paramOn(frame,Layout(0.15,0.6,0.4),Layout(0.6,0.935,0.97));
   frame->Draw();
- 
+if(!plotpars)
+  {
+    if(choseSample==7)
+      {
+	//	latex1.DrawLatex(0.65,1.-0.05*3,Form("CMS pp #sqrt{s} = 2.76 TeV"));
+      }
+    if(choseSample==3)
+      {
+	//	latex1.DrawLatex(0.65,1.-0.05*3,Form("CMS PbPb #sqrt{s} = 2.76 TeV"));
+      }
+ latex1.SetTextSize(0.035);
+  latex1.DrawLatex(0.5,1.-0.05*1.5,Form("%s",choseSampleLegend[choseSample]));
+  latex1.DrawLatex(0.5,1.-0.05*2.5,Form("%s",choseSampleLumi[choseSample])); 
+  if(choseSample!=1 && choseSample!=2 &&choseSample!=7) latex1.DrawLatex(0.5,1.-0.05*5.5,Form("Cent. %d-%d%%",centMin,centMax));
+  latex1.DrawLatex(0.5,1.-0.05*3.5,Form("%.1f < |y| < %.1f",dimuYMin,dimuYMax)); 
+  }
+if(plotpars){
   latex1.SetTextSize(0.035);
   latex1.DrawLatex(0.15,1.-0.05*1.5,Form("%s",choseSampleLegend[choseSample]));
   latex1.DrawLatex(0.15,1.-0.05*2.5,Form("%s",choseSampleLumi[choseSample])); 
   if(choseSample!=1 && choseSample!=2 &&choseSample!=7) latex1.DrawLatex(0.15,1.-0.05*5.5,Form("Cent. %d-%d%%",centMin,centMax));
   latex1.DrawLatex(0.15,1.-0.05*3.5,Form("%.1f < |y| < %.1f",dimuYMin,dimuYMax)); 
-  latex1.DrawLatex(0.15,1.-0.05*4.5,Form("p_{T}^{#mu} > %.1f GeV/c",muonpTcut));
+//  latex1.DrawLatex(0.15,1.-0.05*4.5,Form("p_{T}^{#mu} > %.1f GeV/c",muonpTcut));
 
   cm.cd(0);
   TPad *pPad2 = new TPad("pPad2","pPad2",0.05,0.05,0.95,0.35);
   pPad2->SetTopMargin(0.0);
   pPad2->Draw();
-  pPad2->cd();
+  pPad2->cd();}
   // **************** create pulls; change the chi2 calculation also
   double chi2FromRoo = frame->chiSquare(fit_2nd->floatParsFinal().getSize());
   cout<<"!!!!!!!! chi2 from simple pull= "<<frame->chiSquare()<<"\t chi2 from RooFit= "<<chi2FromRoo <<endl;
@@ -701,6 +766,7 @@ RooRealVar *nbkgd   = new RooRealVar("nBkgd","nbkgd",0,NEvts);
   Chi2             /= (nFullBinsPull - nFitParam);
 
   cout<<"!!!!! nFullBinsPull="<<nFullBinsPull<<"\tnFitParam="<<nFitParam<<endl;
+if(plotpars){
   // draw pulls
   pPad2->cd();
   double mFrameMax = 0;
@@ -720,9 +786,12 @@ RooRealVar *nbkgd   = new RooRealVar("nBkgd","nbkgd",0,NEvts);
   latex1.SetTextSize(0.085);
   double myChi2 = chi2FromRoo*Dof;
   latex1.DrawLatex(0.7,1.-0.05*3.5,Form("#chi^{2}/ndf = %2.1f/%d",myChi2,Dof));
-   
-  //cm.SaveAs(figsDir+figName_+paramOn_+"_pulls.png");
   cm.SaveAs(figsDir+figName_+paramOn_+"_pulls.pdf");
+ }
+  //cm.SaveAs(figsDir+figName_+paramOn_+"_pulls.png");
+if(!plotpars)
+  { cm.SaveAs(figsDir+figName_+paramOn_+"_noPulls.pdf");
+  }
 
    //-------------------------------
   // print the final pdf parameters!
@@ -730,7 +799,7 @@ RooRealVar *nbkgd   = new RooRealVar("nBkgd","nbkgd",0,NEvts);
   // Print fit results 
   cout << endl << "figure name: "<< figName_ << endl;
   cout << "the nominal fit with the default pdf " << endl ;
-  cout<<"p-value = "<< TMath::Prob(UnNormChi2,Dof)<<endl;
+//  cout<<"p-value = "<< TMath::Prob(UnNormChi2,Dof)<<endl;
 
   // ------ calculate the single yields
   // if (choseSample<3)

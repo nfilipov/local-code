@@ -9,8 +9,8 @@ my $workDir      = "/Users/nicolas/Project/ups2013/code/";
 # vP_0p01       |    vP_0p05       |vP_0p01     |   vP_0p05
 #pt_3 | pt_3p5 | pt_4 | pt_4p5 (in each vP subdirectory)
 
-my $pdfPrefix = "pdfOutput/2009/";
-my $txtPrefix = "txtOutput/2009/";
+my $pdfPrefix = "pdfOutput/2014_2001/";
+my $txtPrefix = "txtOutput/2014_2001/";
 my $outFigDirStep = $workDir.$pdfPrefix;
 my $outDatDirStep = $workDir.$txtPrefix;
 my $outFigDir;
@@ -28,13 +28,13 @@ my $samend   = 3;
 my @choseSamples = ("","pp7tev-d0", "pp7tev-d3","pbpbRegit_cm","pbpbPPrecoTT", "pbpbPPrecoGG","pbpbZhen2011","pp2p76tev");
 # ------------------------------------------------------
 my $doNarrowMass = 1; 
-my $choseFitParams = 0; #what you want 0: (1s, 2s, 3s) 1: (1s, 2s/1s; 3s/1s); 2: (1S, (2s+3s)/1s); 3:(1S, 2S/1S, 3S/1S, 3S/2S)
-my @choseWhat2Fit = ("yield_m7","ratio1","ratio23","ratio32");
+my $choseFitParams = 1; #what you want 0: (1s, 2s, 3s) 1: (1s, 2s/1s; 3s/1s); 2: (1S, (2s+3s)/1s); 3:(1S, 2S/1S, 3S/1S, 3S/2S)
+my @choseWhat2Fit = ("yield_m8_14","ratio1","ratio23","ratio32");
 my $prefix          = $choseWhat2Fit[$choseFitParams];
 
-my $ptMuStart = 3;#single muon pt > 4GeV/c cut, that no-one wants to change... that makes me sad.
-my $ptMuEnd = 3;
-my @chooseptMu = ("0","3","3.5","4","4.5");
+my $ptMuStart = 2;#single muon pt > 4GeV/c cut, that no-one wants to change... that makes me sad.
+my $ptMuEnd = 2;
+my @chooseptMu = ("","0","3.5","4","4.5");
 my @outFigPrefix_ptMu = ("pt_0","pt_3","pt_3p5","pt_4","pt_4p5");
 my $ptMuPrefix;
 
@@ -46,7 +46,7 @@ my $vProbPrefix;
 # chose if fix sigma1:
 my @sigma1  = ("0","1"); # fix or not sigma1
 my $sigstart = 0;
-my $sigend   = 1;
+my $sigend   = 0;
 
 my @useRef   = ("0","1","2","3"); # 0 free; 1: fix to MC 2: fixed to MB  NOOOOO !!! look in the code for doc.
 my $refstart  = 3;
@@ -65,16 +65,16 @@ my $centend   =0 ;
 #my @centrality_max = ("4","8", "24", "8","100", "40","0");
 # ----------------------0----1---2---3----4----5----6----7---8---9---10---11--12---13--; 0->7 1S binning, 8->11 2S binning, n>11 for trials
  my @centrality_min = ("0", "0","2","4", "8","12","16","20","0","4", "8","0","16","28"); 
- my @centrality_max = ("40","2","4","8","12","16","20","28","4","8","40","8","28","40");
+ my @centrality_max = ("40","2","4","8","12","16","20","40","4","8","40","8","28","40");
 # 0-5 | 5-10 | 10-20 | 20-30 | 30-40 | 40-50(60) | 50(60)-100 | 0-20 | 20-90(alice comparisons)
 
-my $modelstart =1;
-my $modelend   =6;
+my $modelstart =3;
+my $modelend   =3;
 #Background Model.  1: LS erf*exp + pol2; 2: LS RookeyPdf + pol2; 3: erf*exp; 4: pol2; 5: erf*exp+pol2 6: poly 3
 my @bkgModel        = ("","1","2","3","4","5","6");
 
 # fitting settings and plotting
-my $paramsOnFigure = 1; #1: plot parameters;   0: plot CMS label
+my $paramsOnFigure = 0; #1: plot parameters;   0: plot CMS label
 my $plotBkg        = 1; #0: hide LS or trkRot; 1: plot LS or trkRot data points and fit lines;
 my $doTrkRot       = 0; #0: use LS;   1: use track rotation
 my $doConstrainFit = 0; # 1: use constrain method
@@ -91,16 +91,19 @@ my $isam;
 # my @rapBinMax = ("-1.6","-0.8","0","0.8","1.6","2.4");
 
 # ----------------0----1-------2------3----4-----5-----6-----7--# rapidity binning suited for PbPb 1S (0->4), 2S (5->7);
-my @rapBinMin = ("0.","0.4" ,"0.7","1.0","1.5","0." ,"1.2","0.");
-my @rapBinMax = ("0.4","0.7","1.0","1.5","2.4","1.2","2.4","2.4");
+my @rapBinMin = ("0.","0.4" ,"0.7","1.0","1.5","1.2" ,"0.","0.");
+my @rapBinMax = ("0.4","0.7","1.0","1.5","2.4","2.4","1.2","2.4");
 
-
+my $rapStart = 0;
+my $rapEnd = 4;
+my $ptStart = 0;
+my $ptEnd = 5;
 # pT binning for 2S:
 #my @upsPtBinMin = ("0","6.5","10","0");	 
 #my @upsPtBinMax = ("6.5","10","20","20");
 # ------------------0-----1-----2---3----4----5-----6-----7------8---9## pT binning for 1S (0->5), 2S (6->9);
 my @upsPtBinMin = ("0"  ,"2.5","5","8" ,"12","20" ,"0"  ,"6.5","10","0");	 
-my @upsPtBinMax = ("2.5","5" , "8","12","20","150","6.5","10","20","20");
+my @upsPtBinMax = ("2.5","5" , "8","12","20","50","6.5","10","20","20");
 my $dontDoRapNow =0;
 my $dontDoPtNow =0;
 #loops for mkdir purposes
@@ -128,7 +131,7 @@ for( my $icent=$centstart; $icent <=$centend; $icent++)
   {
     for ( $isam=$samstart; $isam<=$samend; $isam++)
       {
-	$doNarrowMass = 0; 
+#	$doNarrowMass = 0; 
 	if ($isam==1) {$doNarrowMass=1;}
 	#loop over vertex probabilities
 	for (my $ivProb=$vProbStart; $ivProb<=$vProbEnd; $ivProb++)
@@ -198,8 +201,8 @@ for( my $icent=$centstart; $icent <=$centend; $icent++)
   }#centrality loop
 for ( $isam=$samstart; $isam<=$samend; $isam++)
 {
-    $doNarrowMass = 0; 
-    if ($isam==1) {$doNarrowMass=1;}
+  #  $doNarrowMass = 1; 
+ #   if ($isam==1) {$doNarrowMass=1;}
     #loop over vertex probabilities
     for (my $ivProb=$vProbStart; $ivProb<=$vProbEnd; $ivProb++)
     {
@@ -228,7 +231,7 @@ for ( $isam=$samstart; $isam<=$samend; $isam++)
 			#  next if($iref==1);# do not fix to MC 
 			next if(($iref==1 || $iref==2) && ($isig==0 && $ifsr==0));
 			
-			for(my $iRap=0; $iRap<=7; $iRap++){ #hardcoded... so what?
+			for(my $iRap=$rapStart; $iRap<=$rapEnd; $iRap++){ 
 			    $dimuYMin=$rapBinMin[$iRap];
 			    $dimuYMax=$rapBinMax[$iRap];
 			    $upsPtCutMin    = 0;
@@ -258,12 +261,12 @@ for ( $isam=$samstart; $isam<=$samend; $isam++)
 				print  "vProb is: $vProb\n";
 				print   "single Muon pT > $muonPtCut\n";
 				print    " $upsPtCutMin < pT_Ups < $upsPtCutMax \n";
-				print     "  $dimuYMin < y_Ups < $dimuYMax \n";
+				print     " $dimuYMin < y_Ups < $dimuYMax \n";
 				system("root -l -b -q	'fitUpsilonYields_Yvariant.C($choseSample,$choseFitParams,$bkgType,$myfsr,$mysigma1,$centMin,$centMax,$muonEtaMin,$muonEtaMax,$dimuYMin,$dimuYMax,$muonPtCut,$plotBkg,$doTrkRot,$doConstrainFit,$myref,$paramsOnFigure,\"$sample\",\"$outFigDir\",\"$outDatDir\",\"$prefix\",$doNarrowMass,$vProb)'
 			"); 
 			    } #bkg 
 			} # rapidity bins
-			for(my $iUpsPt=0; $iUpsPt<=9; $iUpsPt++){ #hardcoded... so what?
+			for(my $iUpsPt=$ptStart; $iUpsPt<=$ptEnd; $iUpsPt++){ 
 			    $upsPtCutMin=$upsPtBinMin[$iUpsPt];
 			    $upsPtCutMax=$upsPtBinMax[$iUpsPt];
 			    $dimuYMin       = -2.4; 
