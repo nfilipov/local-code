@@ -47,7 +47,7 @@ double mass_l =  7.0;
 double mass_h = 14.0;
 double binw   = 0.1;    //bin width of the histogram
 
-const int nData   = 8;
+const int nData   = 9;
 const char* choseSampleLegend[nData] = {"",
 					"pp #sqrt{s} = 7 TeV",
 					"pp #sqrt{s} = 7 TeV",
@@ -55,7 +55,8 @@ const char* choseSampleLegend[nData] = {"",
 					"PbPb #sqrt{s_{NN}} = 2.76 TeV (pp reco TT)",
 					"PbPb #sqrt{s_{NN}} = 2.76 TeV (pp reco GG)",
 					"PbPb #sqrt{s_{NN}} = 2.76 TeV (HI reco GG)",
-					"pp #sqrt{s} = 2.76 TeV"};
+					"pp #sqrt{s} = 2.76 TeV",
+					"CMS simulation, pp #sqrt{s} = 2.76 TeV"};
 
 const char* choseSampleLumi[nData] = {"",
 				      "L_{int} = 621 pb^{-1}",
@@ -64,8 +65,8 @@ const char* choseSampleLumi[nData] = {"",
 				      "L_{int} = xxx \mub^{-1}",
 				      "L{int} = xxx \mub^{-1}",
 				      "L_{int} = 150 \mub^{-1}",
-				      "L_{int} = 5.41 pb^{-1}"
-};
+				      "L_{int} = 5.41 pb^{-1}",
+				      ""};
 
 // -------- make some local picks
 bool doMinos      = 0;     //kFALSE;
@@ -78,7 +79,8 @@ pair<double, double> ConfidencInterval(float, RooRealVar *fnll, RooDataSet *data
 //this "variant of fitUpsilonYields" replaces dimuYMin and dimuYMax by dimuPtMin and dimuPtMax, forcing the fit to be done in -2.4<y<2.4
 //the reason for this is the number of arguments one can append to RooDataSet (max. is 8)
 //
-void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: pp@7TeV data ; 2: pp@2.76TeV; 3: PbPb@276
+void fitUpsilonYields_variant(int whatBin        =0,
+			      int choseSample    = 3, //Input data sample.  1: pp@7TeV data ; 2: pp@2.76TeV; 3: PbPb@276
 			      int choseFitParams = 0, //0: (1s, 2s, 3s) 1: (1s, 2s/1s; 3s/1s); 2: (1S, (2s+3s)/1s)
 			      int bkgdModel      = 3, //1:LS erf*exp + pol2; 2:LS RookeyPdf + pol2; 3:erf*exp; 4:pol2; 5:erf*exp+pol2 6:pol3
 			      int fixFSR         = 1,
@@ -89,14 +91,15 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
 			      float muonEtaMax  = 1, 
 			      float dimuPtMin    = -1., 
 			      float dimuPtMax    = 1.,
-			      double muonpTcut  = 4, //single muon pT cut
+			      double muonpTcut1  = 3.5, //single muon pT cut
+			      double muonpTcut2 = 4, //1 should always be lower than 2!
 			      bool plotBkg      = 0, //0: hide LS or trkRot; 1: plot LS or trkRot data points and fit lines;
 			      bool doTrkRot     = 0, //0: use LS;   1: use track rotation
 			      bool doConstrainFit   = 0,  //1: use constrain method
 			      int useRef            = 1, // # 0 none 1: MC, 2: MB
 			      bool plotpars         = 1, //1: plot parameters;   0: plot CMS label
 			      const char* choseSampleCase = "regit", //
-			      const char* outFigsDir      = "pdfOutput/",// figs dir outfile location
+			      const char* outFigsDir      = "pdfOutput",// figs dir outfile location
 			      TString outDatsDir          = "txtOutput",// dats dir outfile location
 			      const char* outFilePrefix   = "ratios", // yields, ratios
 			      bool narrowMass             = false,
@@ -109,6 +112,8 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
   if (dimuPtMax<=3.5) mass_l = 8.0;
   // input file
   TString finput;
+  double muonPtCut_min1 = muonpTcut1;
+  double muonPtCut_min2 = muonpTcut2;
   switch (choseSample) 
     {
     case 1: // pp @ 7TeV - dimuon0-v1
@@ -142,7 +147,15 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
       finput   = "../dimuonTree_HI2011_fulldataset_trkRot.root";
       break;
     case 7://pp @ 2.76TeV
-      finput   = "../dimuonTree_upsiMiniTree_pp276tev_5p41_Run211739-211831_trigBit1_allTriggers0_pt4.root";
+      // finput   = "../dimuonTree_upsiMiniTree_pp276tev_5p41_Run211739-211831_trigBit1_allTriggers0_pt4.root"; //trk muons!
+      finput   = "../dimuonTree_upsiMiniTree_pp276tev_5p41_ptmu2_Run211739-211831_GlbGlb_trigBit1_allTriggers0.root"; // Glb muons, all above 2!
+     
+      break;
+    case 8:
+      finput = "../dimuonTree_upsiMiniTree_1Spythia2p76_ptmu4_Nov06_2013_RunMC_trigBit1_allTriggers1.root";
+      mass_l = 8.5;
+      mass_h = 10.1;
+      binw=0.05;
       break;
     default:
       cout<<"You don't know what you are doing! Pick one of the available datasets in the choseSampleCases[] array"<<endl;
@@ -154,7 +167,13 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
       fixSigma1 = 0;
       fixFSR    = 0;
     }
-
+  if(choseSample!=8){ 
+  
+    if(muonpTcut1==4. && dimuPtMax==2.5)
+      {mass_l =8.;
+      }
+    else {mass_l=7.5;}
+  }
   // output setting files:
   TString figsDir(Form("%s",outFigsDir)); //output fig location
   
@@ -166,12 +185,35 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
   double muonEtaCut_max = muonEtaMax; 
   double upsYCut_min    = -2.4;
   double upsYCut_max    = 2.4;
-  
+
+
+  // int whatBin;
+// # ------------------0-----1-----2---3----4----5-----6-----7------8---9
+// pT binning for 1S (0->5), 2S (6->9);
+// my @upsPtBinMin = ("0","2.5","5","8" ,"12","20" ,"0"  ,"6.5","10","0");	 
+// my @upsPtBinMax = ("2.5","5" , "8","12","20","50","6.5","10","20","50");
+  if(dimuPtMin == 0. && dimuPtMax ==2.5)   {whatBin=0;}
+  if(dimuPtMin == 2.5 && dimuPtMax ==5.)   {whatBin=1;}
+  if(dimuPtMin == 5. && dimuPtMax == 8.)   {whatBin=2;}
+  if(dimuPtMin == 8 && dimuPtMax ==12)     {whatBin=3;}
+  if(dimuPtMin == 12 && dimuPtMax ==20)    {whatBin=4;}
+  if(dimuPtMin == 20 && dimuPtMax ==50)    {whatBin=5;}
+  if(dimuPtMin == 0. && dimuPtMax ==6.5)   {whatBin=6;}
+  if(dimuPtMin == 6.5 && dimuPtMax ==10)   {whatBin=7;}
+  if(dimuPtMin == 10 && dimuPtMax ==20)    {whatBin=8;}
+  if(dimuPtMin == 0 && dimuPtMax ==50)     {whatBin=9;}
+
+  cout << "been there" << endl;
   int centrality_max = centralityMax; 
   int centrality_min = centralityMin; 
-  
-  TString cut_ap(Form("(%d<=Centrality && Centrality<%d) && (%.2f<muPlusEta && muPlusEta < %.2f) && (%.2f<muMinusEta && muMinusEta < %.2f) && (%.2f<upsPt && upsPt<%.2f) && vProb > %.2f",centrality_min,centrality_max,muonEtaCut_min,muonEtaCut_max,muonEtaCut_min,muonEtaCut_max,dimuPtMin,dimuPtMax,vProbPick));
- 
+  if(choseSample!=8){
+    TString cut_ap(Form("(%d<=Centrality && Centrality<%d) && (%.2f<muPlusEta && muPlusEta < %.2f) && (%.2f<muMinusEta && muMinusEta < %.2f) && (%.2f<upsPt && upsPt<%.2f) && vProb > %.2f  &&((muPlusPt > %.2f && muMinusPt > %.2f) || (muPlusPt > %.2f && muMinusPt > %.2f))",centrality_min,centrality_max,muonEtaCut_min,muonEtaCut_max,muonEtaCut_min,muonEtaCut_max,dimuPtMin,dimuPtMax,vProbPick,muonPtCut_min1,muonPtCut_min2,muonPtCut_min2,muonPtCut_min1));
+  }
+
+  else if(choseSample==8){
+    TString cut_ap(Form(" (%.2f<muPlusEta && muPlusEta < %.2f) && (%.2f<muMinusEta && muMinusEta < %.2f) &&  (%.2f<upsPt && upsPt<%.2f) &&((muPlusPt > %.2f && muMinusPt > %.2f) || (muPlusPt > %.2f && muMinusPt > %.2f))",muonEtaMin,muonEtaMax,muonEtaMin,muonEtaMax,dimuPtMin,dimuPtMax,muonPtCut_min1,muonPtCut_min2,muonPtCut_min2,muonPtCut_min1)); 
+}
+
   int centMin = centrality_min;
   int centMax = centrality_max;
   if(choseSample==3 || choseSample==6) 
@@ -179,18 +221,18 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
       centMin = (int)(centrality_min*2.5);
       centMax = (int)(centrality_max*2.5);
     }
-  TString figName_(Form("%s_%s_cent%d-%d_bkgModel%d_muonEta%.2f%.2f_dimuPt%.2f%.2f_trkRot%d_constrain%d_fsr%d_sigma%d_ref%d",
+  TString figName_(Form("%s_%s_cent%d-%d_bkgModel%d_muonEta%.2f%.2f_muonPt%.2f-%.2f_dimuPt%.2f%.2f_trkRot%d_constrain%d_fsr%d_sigma%d_ref%d",
 			outFilePrefix,choseSampleCase,centMin,centMax,
-			bkgdModel, muonEtaCut_min,muonEtaCut_max,dimuPtMin,dimuPtMax,doTrkRot,doConstrainFit,fixFSR,fixSigma1,useRef));
+			bkgdModel, muonEtaCut_min,muonEtaCut_max,muonPtCut_min1,muonPtCut_min2,dimuPtMin,dimuPtMax,doTrkRot,doConstrainFit,fixFSR,fixSigma1,useRef));
 
   // output file names
   if(narrowMass)
     {
       mass_l =  8.0;
       mass_h = 14.0;
-      TString figName_(Form("%s_%s_cent%d%d_bkgModel%d_muonEta%.2f%.2f_dimuPt%.2f%.2f_trkRot%d_constrain%d_%d_%d_ref%d_mass8p511p5",
+      TString figName_(Form("%s_%s_cent%d%d_bkgModel%d_muonEta%.2f%.2f_muonPt%.2f-%.2f_dimuPt%.2f%.2f_trkRot%d_constrain%d_%d_%d_ref%d_mass8p511p5",
 			    outFilePrefix,choseSampleCase,centMin,centMax,bkgdModel,
-			    muonEtaCut_min,muonEtaCut_max,dimuPtMin,dimuPtMax,doTrkRot,doConstrainFit,fixFSR,fixSigma1,useRef)); // output file names 
+			    muonEtaCut_min,muonEtaCut_max,muonPtCut_min1,muonPtCut_min2,dimuPtMin,dimuPtMax,doTrkRot,doConstrainFit,fixFSR,fixSigma1,useRef)); // output file names 
       
     } 
   // if(choseSample==7)
@@ -210,7 +252,7 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
   figName_.ReplaceAll("-","M");
   figName_.ReplaceAll(".","");
 
-  cout<<"Fitting: Pt["<< dimuPtMin <<","<< dimuPtMax <<"] and centrality ["<<centrality_min<<","<<centrality_max<<"]!!!!"<<endl;
+  cout<<"Fitting: Pt["<< dimuPtMin <<","<< dimuPtMax <<"] , muPt > ["<< muonPtCut_min1<<","<<muonPtCut_min2<<"] and centrality ["<<centrality_min<<","<<centrality_max<<"]!!!!"<<endl;
   cout << "oniafitter processing"
        << "\n\tInput:  \t" << finput
        << "\n\tOutput: \t" << figName_
@@ -218,8 +260,11 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
   // -----------
 
   TFile f(finput,"read");
-
-  TTree* theTree       = (TTree*)gROOT->FindObject("UpsilonTree"); // OS --- all mass
+  if(choseSample!=8){
+    TTree* theTree       = (TTree*)gROOT->FindObject("UpsilonTree"); // OS --- all mass
+  }  else if (choseSample == 8)
+    {TTree* theTree       = (TTree*)gROOT->FindObject("RecoUpsilonTree"); // OS --- all mass
+    }
   TTree* allsignTree   = (TTree*)gROOT->FindObject("UpsilonTree_allsign");//all sign and all mass
   TTree* trkRotTree=0;
   if (doTrkRot) trkRotTree = (TTree*)gROOT->FindObject("UpsilonTree_trkRot");
@@ -232,16 +277,19 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
   RooRealVar* QQsign     = new RooRealVar("QQsign",  "QQsign"  ,-1,5);
   RooRealVar* Centrality = new RooRealVar("Centrality","Centrality",0,100);
    
-  RooRealVar* muPlusPt   = new RooRealVar("muPlusPt","muPlusPt",muonpTcut,50);
-  RooRealVar* muMinusPt  = new RooRealVar("muMinusPt","muMinusPt",muonpTcut,50);
+  RooRealVar* muPlusPt   = new RooRealVar("muPlusPt","muPlusPt",muonPtCut_min1,100);
+  RooRealVar* muMinusPt  = new RooRealVar("muMinusPt","muMinusPt",muonPtCut_min1,100);
   RooRealVar* muPlusEta  = new RooRealVar("muPlusEta","muPlusEta",  -2.4,2.4);
   RooRealVar* muMinusEta = new RooRealVar("muMinusEta","muMinusEta",-2.4,2.4);
   RooRealVar* runNumber  = new RooRealVar("runNb",  "runNb",210000, 222000);
 
   // *************************************************** importing
   //##### import unlike-sign data set
-  RooDataSet *data0 = new RooDataSet("data0","data0",theTree,
-				     RooArgSet(*mass,*upsPt,*muPlusPt,*muMinusPt,*muPlusEta,*muMinusEta,*Centrality,*vProb));
+  if(choseSample!=8){  RooDataSet *data0 = new RooDataSet("data0","data0",theTree,
+							  RooArgSet(*mass,*upsPt,*muPlusPt,*muMinusPt,*muPlusEta,*muMinusEta,*Centrality,*vProb));}
+  else if(choseSample==8){  RooDataSet *data0 = new RooDataSet("data0","data0",theTree,
+							       RooArgSet(*mass,*upsPt,*muPlusPt,*muMinusPt,*muPlusEta,*muMinusEta));}
+
 
   RooDataSet *data0_ap =  ( RooDataSet*)data0->reduce(Cut(cut_ap));
   data0_ap->SetName("data0_ap");
@@ -252,34 +300,61 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
   RooDataSet *data = ( RooDataSet*)data0_ap;
   data->SetName("data");
   data->Print();
- 
-  // ###### import like-sign data set
-  RooDataSet *likesignData0    = new RooDataSet("likesignData0","likesignData0",allsignTree,
-						RooArgSet(*mass,*upsPt,*muPlusPt,*muMinusPt,*muPlusEta,*muMinusEta,*Centrality,*QQsign,*vProb));
-  RooDataSet *likesignData0_ap = ( RooDataSet*)likesignData0->reduce(Cut(cut_ap+" && QQsign != 0"));
-  likesignData0_ap->SetName("likesignData0_ap");
-  likesignData0_ap->Print();
+    cout << "done that" << endl;
+   // ###### import like-sign data set
+  if(choseSample!=8){  RooDataSet *likesignData0    = new RooDataSet("likesignData0","likesignData0",allsignTree,
+								     RooArgSet(*mass,*upsPt,*muPlusPt,*muMinusPt,*muPlusEta,*muMinusEta,*Centrality,*QQsign,*vProb));
+    RooDataSet *likesignData0_ap = ( RooDataSet*)likesignData0->reduce(Cut(cut_ap+" && QQsign != 0"));
+    likesignData0_ap->SetName("likesignData0_ap");
+    likesignData0_ap->Print();
 
-  RooDataSet *likesignData = ( RooDataSet*)likesignData0_ap;
-  likesignData->SetName("likesignData");
-  likesignData->Print();
+    RooDataSet *likesignData = ( RooDataSet*)likesignData0_ap;
+    likesignData->SetName("likesignData");
+    likesignData->Print();
   
-  //import track-rotation data set
-  RooDataSet *TrkRotData0, *TrkRotData;
-  if (doTrkRot) 
-    {
-      TrkRotData0 = new RooDataSet("TrkRotData_ap","TrkRotData_ap",trkRotTree,
-				   RooArgSet(*mass,*upsPt,*muPlusPt,*muMinusPt,*muPlusEta,*muMinusEta,*Centrality,*QQsign,*vProb));
+    //import track-rotation data set
+    RooDataSet *TrkRotData0, *TrkRotData;
+    if (doTrkRot) 
+      {
+	TrkRotData0 = new RooDataSet("TrkRotData_ap","TrkRotData_ap",trkRotTree,
+				     RooArgSet(*mass,*upsPt,*muPlusPt,*muMinusPt,*muPlusEta,*muMinusEta,*Centrality,*QQsign,*vProb));
 
-      RooDataSet *TrkRotData0_ap = ( RooDataSet*)TrkRotData0->reduce(Cut(cut_ap));
-      TrkRotData0_ap->SetName("TrkRotData0_ap");
-      TrkRotData0_ap->Print();
+	RooDataSet *TrkRotData0_ap = ( RooDataSet*)TrkRotData0->reduce(Cut(cut_ap));
+	TrkRotData0_ap->SetName("TrkRotData0_ap");
+	TrkRotData0_ap->Print();
     
-      TrkRotData = ( RooDataSet*) TrkRotData0_ap;
-      TrkRotData->SetName("TrkRotData");
-      TrkRotData->Print();
-    }
+	TrkRotData = ( RooDataSet*) TrkRotData0_ap;
+	TrkRotData->SetName("TrkRotData");
+	TrkRotData->Print();
+      }
+  }
+  else if(choseSample ==8)
+    { RooDataSet *likesignData0    = new RooDataSet("likesignData0","likesignData0",allsignTree,
+						    RooArgSet(*mass,*upsPt,*muPlusPt,*muMinusPt,*muPlusEta,*muMinusEta,*QQsign));
+      RooDataSet *likesignData0_ap = ( RooDataSet*)likesignData0->reduce(Cut(cut_ap+" && QQsign != 0"));
+      likesignData0_ap->SetName("likesignData0_ap");
+      likesignData0_ap->Print();
+
+      RooDataSet *likesignData = ( RooDataSet*)likesignData0_ap;
+      likesignData->SetName("likesignData");
+      likesignData->Print();
   
+      //import track-rotation data set
+      RooDataSet *TrkRotData0, *TrkRotData;
+      if (doTrkRot) 
+	{
+	  TrkRotData0 = new RooDataSet("TrkRotData_ap","TrkRotData_ap",trkRotTree,
+				       RooArgSet(*mass,*upsPt,*muPlusPt,*muMinusPt,*muPlusEta,*muMinusEta,*QQsign));
+
+	  RooDataSet *TrkRotData0_ap = ( RooDataSet*)TrkRotData0->reduce(Cut(cut_ap));
+	  TrkRotData0_ap->SetName("TrkRotData0_ap");
+	  TrkRotData0_ap->Print();
+    
+	  TrkRotData = ( RooDataSet*) TrkRotData0_ap;
+	  TrkRotData->SetName("TrkRotData");
+	  TrkRotData->Print();
+	}
+    }
   // *************************************************** signal PDF
   const double M1S = 9.46;   //upsilon 1S pgd mass value
   const double M2S = 10.023;  //upsilon 2S pgd mass value
@@ -296,6 +371,7 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
 
   //detector resolution ?? where is this coming from?
   RooRealVar    *sigma1  = new RooRealVar("sigma1","#sigma_{1S}",0.092,0.04,0.3); // 
+  RooRealVar    *sigmaGaus = new RooRealVar("sigmaGaus","#sigmaGaus_{1S}",0.08,0.01,0.2); 
   RooFormulaVar *sigma1S = new RooFormulaVar("sigma1S","@0"   ,RooArgList(*sigma1));
   RooFormulaVar *sigma2S = new RooFormulaVar("sigma2S","@0*@1",RooArgList(*sigma1,*rat2));
   RooFormulaVar *sigma3S = new RooFormulaVar("sigma3S","@0*@1",RooArgList(*sigma1,*rat3));
@@ -309,12 +385,94 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
   // col.1 = MonteCarlo
   // col.2 = PbPb data nominal fit
   // col.3 = MC from 2013 vineet
-  double alpha_mc[7]   = {0, 1.67 , 0.98 , 1.626};//
-  double npow_mc[7]    = {0, 2.3  , 2.3  , 2.3};// 
-  double sigma1_mc[7]  = {0, 0.092, 0.078,0.092};// 0.06506 
+  // double alpha_mc[7]   = {0, 1.67 , 0.98 , 1.626};//
+  // double npow_mc[7]    = {0, 2.3  , 2.3  , 2.3};// 
+  // double sigma1_mc[7]  = {0, 0.092, 0.078,0.092};// 0.06506 
+  // alpha->setVal(alpha_mc[useRef]);
+  // npow->setVal(npow_mc[useRef]);
+  //
+  // ------------------0-----1-----2---3----4----5-----6-----7-----8---9
+  // pT binning for 1S (0->5), 2S (6->9);
+  //my @upsPtBinMin = ("0","2.5","5","8" ,"12","20" ,"0"  ,"6.5","10","0");	 
+  //my @upsPtBinMax = ("2.5","5" , "8","12","20","50","6.5","10","20","50");  
+  //
+  //
 
-  alpha->setVal(alpha_mc[useRef]);
-  npow->setVal(npow_mc[useRef]);
+  if(muonpTcut1==3.5){
+    double alpha_mc[10] =
+      { 1.75946,
+	1.87364,
+	1.82564,
+	1.9335 ,
+	1.93361,
+	1.7797 ,
+	1.81081,
+	1.90496,
+	1.92792,
+	1.835  };
+    double npow_mc[10]= 
+      { 1.63391 ,
+	1.52978 ,
+	1.53023 ,
+	1.30771 ,
+	1.35361 ,
+	1.70085 ,
+	1.58942 ,
+	1.35769 ,
+	1.3364  ,
+	1.531   };
+    double sigma_mc[10]=
+      { 0.0909792,
+	0.092495 ,
+	0.0923394,
+	0.0931367,
+	0.0936032,
+	0.0962131,
+	0.0918248,
+	0.0927385,
+	0.0934062,
+	0.0921285};
+  }
+  else if(muonpTcut1==4){
+    double alpha_mc[10] =
+      { 1.77271,
+	1.87008,
+	1.75828,
+	1.87583,
+	1.91897,
+	2.02287,
+	1.80366,
+	1.84917,
+	1.8909 ,
+	1.82677};
+  double npow_mc[10]= 
+    { 2.07923,
+      1.65779,
+      1.73503,
+      1.44051,
+      1.38119,
+      1.2021 ,
+      1.8635 ,
+      1.50678,
+      1.40759,
+      1.71801};
+  double sigma_mc[10]=
+    { 0.0915401,
+      0.0921983,
+      0.0914532,
+      0.0925474,
+      0.0934004,
+      0.0952086,
+      0.091757,
+      0.0922033,
+      0.0929961,
+      0.0920304};
+  }
+  alpha->setVal(alpha_mc[whatBin]);
+  //  npow->setVal(npow_mc[useRef]); //old
+  npow->setVal(npow_mc[whatBin]);
+
+  if(choseSample==8){fixFSR=0;}
   switch (fixFSR) // 0: free;  1: both fixed 2: alpha fixed 3: npow fixed
     {      
     case 0:// all free
@@ -337,14 +495,14 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
       cout<<"Donno this choice! Pick somehting for FSR parameters that I know"<<endl;
       break;
     }
-
+  if(choseSample==8){fixSigma1=0;}
   switch (fixSigma1)
     {
     case 0: // free
       sigma1->setConstant(false);
       break;
     case 1: // fix to MB or MC values; 
-      sigma1->setVal(sigma1_mc[useRef]);
+      sigma1->setVal(sigma_mc[whatBin]);
       sigma1->setConstant(true);
       break;
     default:
@@ -355,16 +513,25 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
 
   // relative fraction of the two Gaussians components for each CB
   RooRealVar *sigmaFraction = new RooRealVar("sigmaFraction","Sigma Fraction",0.3,0.,1.);
-  sigmaFraction->setVal(0);
-  sigmaFraction->setConstant(kTRUE);
-  
+   if(choseSample!=8)
+    { sigmaFraction->setVal(0);
+      sigmaFraction->setConstant(kTRUE);
+    }
   /// Upsilon 1S
   RooCBShape  *cb1S_1    = new RooCBShape ("cb1S_1", "FSR cb 1s",
 					   *mass,*mean1S,*sigma1,*alpha,*npow);
-  RooCBShape  *cb1S_2    = new RooCBShape ("cb1S_2", "FSR cb 1s",
-					   *mass,*mean1S,*sigma1S,*alpha,*npow);
-  RooAddPdf      *sig1S  = new RooAddPdf  ("sig1S","1S mass pdf",
-					   RooArgList(*cb1S_1,*cb1S_2),*sigmaFraction);
+  if(choseSample!=8)
+    { 
+      RooCBShape  *cb1S_2    = new RooCBShape ("cb1S_2", "FSR cb 1s",
+					       *mass,*mean1S,*sigma1S,*alpha,*npow);
+      RooAddPdf      *sig1S  = new RooAddPdf  ("sig1S","1S mass pdf",
+					       RooArgList(*cb1S_1,*cb1S_2),*sigmaFraction);}
+  else if(choseSample==8)
+    {
+      RooCBShape  *cb1S_2    = new RooCBShape ("cb1S_2", "FSR cb 1s",
+					       *mass,*mean1S,*sigmaGaus,*alpha,*npow);
+      RooAddPdf      *sig1S  = new RooAddPdf  ("sig1S","1S mass pdf",
+					       RooArgList(*cb1S_1,*cb1S_2),*sigmaFraction);}
   // sig1S is then jsut cb1S2: c*pdf_1+(1-c)*pdf_2
   
   /// Upsilon 2S
@@ -393,28 +560,28 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
   switch (choseFitParams)
     {
     case 0://use the YIELDs of 2S and 3S as free parameters
-      RooRealVar *nsig2f  = new RooRealVar("N2S","nsig2S",   nt*0.25,-1*nt,10*nt);
-      RooRealVar *nsig3f  = new RooRealVar("N3S","nsig3S",   nt*0.25,-1*nt,10*nt);
+      RooRealVar *nsig2f  = new RooRealVar("N_{#Upsilon(2S)}","nsig2S",   nt*0.25,-1*nt,10*nt);
+      RooRealVar *nsig3f  = new RooRealVar("N_{#Upsilon(3S)}","nsig3S",   nt*0.25,-1*nt,10*nt);
       break;
     case 1:  //use the RATIOs of 2S and 3S as free parameters
       RooRealVar *f2Svs1S   = new RooRealVar("R_{#frac{2S}{1S}}","f2Svs1S",0.26,-0.1,1.0);
       RooRealVar *f3Svs1S   = new RooRealVar("R_{#frac{3S}{1S}}","f3Svs1S",0.13,-0.1,1.0);
-      RooFormulaVar *nsig2f = new RooFormulaVar("N2S","@0*@1", RooArgList(*nsig1f,*f2Svs1S));
-      RooFormulaVar *nsig3f = new RooFormulaVar("N3S","@0*@1", RooArgList(*nsig1f,*f3Svs1S));
+      RooFormulaVar *nsig2f = new RooFormulaVar("N_{#Upsilon(2S)}","@0*@1", RooArgList(*nsig1f,*f2Svs1S));
+      RooFormulaVar *nsig3f = new RooFormulaVar("N_{#Upsilon(3S)}","@0*@1", RooArgList(*nsig1f,*f3Svs1S));
       f2Svs1S->setConstant(kFALSE);
       f3Svs1S->setConstant(kFALSE);
       break;
     case 2:// do (2s+3s)/1s
       RooRealVar *f2Svs1S   = new RooRealVar("R_{#frac{2S}{1S}}","f2Svs1S",0.26,-0.1,1.0);
       RooRealVar *f23vs1S   = new RooRealVar("R_{#frac{2S+3S}{1S}}","f23vs1S",0.45,-0.1,1);
-      RooFormulaVar *nsig2f = new RooFormulaVar("N2S","@0*@1", RooArgList(*nsig1f,*f2Svs1S));
-      RooFormulaVar *nsig3f = new RooFormulaVar("N3S","@0*@2-@0*@1", 
+      RooFormulaVar *nsig2f = new RooFormulaVar("N_{#Upsilon(2S)}","@0*@1", RooArgList(*nsig1f,*f2Svs1S));
+      RooFormulaVar *nsig3f = new RooFormulaVar("N_{#Upsilon(3S)}","@0*@2-@0*@1", 
 						RooArgList(*nsig1f,*f2Svs1S,*f23vs1S));
       break;
     case 3://do 2s/1s, 3s/1s, 3s/2s
       RooRealVar *f2Svs1S   = new RooRealVar("R_{#frac{2S}{1S}}","f2Svs1S",0.26,-0.1,1.0);
       RooRealVar *f3Svs1S   = new RooRealVar("R_{#frac{3S}{1S}}","f3Svs1S",0.13,-0.1,1.0);
-      RooFormulaVar *nsig2f = new RooFormulaVar("N2S","@0*@1", RooArgList(*nsig1f,*f2Svs1S));
+      RooFormulaVar *nsig2f = new RooFormulaVar("N_{#Upsilon(2S)}","@0*@1", RooArgList(*nsig1f,*f2Svs1S));
       //   RooFormulaVar *nsig3f = new RooFormulaVar("N3S","@0*@1", RooArgList(*nsig1f,*f3Svs1S));
       RooRealVar *f3Svs2S = new RooRealVar("R_{#frac{3S}{2S}}","f3Svs2S",0.5,-1,1);
       RooFormulaVar *nsig3f= new RooFormulaVar("N32S","@0/@1",RooArgList(*f3Svs1S,*f2Svs1S));
@@ -426,7 +593,7 @@ void fitUpsilonYields_variant(int choseSample    = 3, //Input data sample.  1: p
       break;
     }  
  double NEvts;
- NEvts = data->sumEntries();
+ NEvts = data->sumEntries();///////////////////////////////!!!!!
   // bkg Chebychev
   RooRealVar *nbkgd   = new RooRealVar("n_{Bkgd}","nbkgd",0,NEvts);
   RooRealVar *bkg_a1  = new RooRealVar("a1_bkg", "bkg_{a1}", 0, -5, 5);
@@ -462,88 +629,111 @@ RooFormulaVar *nResidualbkgd = new RooFormulaVar("NResidualBkg","@0-@1",
  
 
 // *************************************************** bkgModel
-RooRealVar turnOn("turnOn","turnOn" , 1.1., 18);
-RooRealVar width("width","width"    , 0.5,40.);// MB 2.63
+RooRealVar turnOn("turnOn","turnOn" , 1., 10);
+RooRealVar width("width","width"    , 0.5,80.);// MB 2.63
 RooRealVar decay("decay","decay"    , 0., 8.9);// MB: 3.39
- if(choseSample==3)
+ if(choseSample==3 || choseSample==7)
    {
-     if(dimuPtMin==2.5 && dimuPtMax==5.0)
+     if(whatBin==0)
        {
-	 //width.setVal(4.2);
-	 if(choseFitParams==0) alpha.setVal(1.14);
-       }
-     if(dimuPtMin==5.0 && dimuPtMax==8.0)
-       {
-	 RooRealVar width("width","width"    , 10, 14. );// MB 2.63
-       }
 
-     if(dimuPtMin==0.0 && dimuPtMax==20.0)
-       {
-	 alpha.setVal(1.3);
+	    RooRealVar turnOn("turnOn","turnOn", 0.,9.);
+	    RooRealVar width("width","width",0.5, 9.);// MB 2.63
+	    RooRealVar decay("decay","decay",0, 8.);// MB: 3.39
+	    alpha->setVal(2.);
+	    if(choseSample==7 && muonpTcut1==3.5)
+	      {	    RooRealVar turnOn("turnOn","turnOn", 0.,8.);
+	      }
        }
-    if(dimuPtMin==12.0 && dimuPtMax==20.0)
+     if(whatBin==1)
        {
-	 alpha.setVal(1.2);
-	 width.setVal(11.6);
-       }
-    if(dimuPtMin==20.0 && dimuPtMax==50.0)
-       {
-	 RooRealVar turnOn("turnOn","turnOn" , 1.1, 12);
-	 RooRealVar width("width","width"    , 0.5, 40. );// MB 2.63
-	 RooRealVar decay("decay","decay"    , 0. , 9.);// MB: 3.39
-	 //  decay.setVal(12);
-       }
-    if(dimuPtMin==6.5 && dimuPtMax==10.)
-      {
-	RooRealVar turnOn("turnOn","turnOn" , 0, 13);
-	RooRealVar width("width","width"    , 0.5, 14. );// MB 2.63
-	RooRealVar decay("decay","decay"    , 0. , 9.);// MB: 3.39
-		 if(choseFitParams==0) 	RooRealVar decay("decay","decay"    , 0. , 12.);// MB: 3.39
-      }
-   }
- if(choseSample==7)
-   {
-     if(dimuPtMin==0.0 && dimuPtMax==20.0)
-       {
-	 alpha.setVal(1.3);
-       }
-     if(dimuPtMin==5.0 && dimuPtMax==8.0)
-       {
-	 //	 alpha.setVal(1.33);
-       }
-    if(dimuPtMin==8.0 && dimuPtMax==12.0)
-       {
-	 RooRealVar width("width","width"    , 10, 14. );// MB 2.63
-       }
-     if(dimuPtMin==12.)
-       {
-	 alpha.setVal(1.07);
-       }
-     if(dimuPtMin==10. && dimuPtMax==20.)
-       {
-	 width.setVal(1.9);
-	 //turnOn.setVal(7.1);
-       }
-    if(dimuPtMin==20.0 && dimuPtMax==50.0)
-       {
-	 RooRealVar turnOn("turnOn","turnOn" , 1.1, 16);
-	 RooRealVar width("width","width"    , 1.3, 40. );// MB 2.63
-	 RooRealVar decay("decay","decay"    , 0. , 9.);// MB: 3.39
-	 //  decay.setVal(12);
-	 if(choseFitParams==0){
-	 RooRealVar *nsig1f   = new RooRealVar("N_{#Upsilon(1S)}","nsig1S",0,0.35*nt);
-	 RooRealVar *nsig2f   = new RooRealVar("N_{#Upsilon(2S)}","nsig2S",nt*0.25,0,0.25*nt);
-	 RooRealVar *nsig3f   = new RooRealVar("N_{#Upsilon(3S)}","nsig3S",nt*0.25,0,0.25*nt);
-	   // nsig2f.setVal(40);
-	   // nsig3f.setVal(30);
-	 }
-	 if(choseFitParams==1)
+	 cout<< "pd #" << whatBin << endl;
+	 RooRealVar turnOn("turnOn","turnOn", 0.5,8.3);
+	 RooRealVar width("width","width",0.6, 9.);// MB 2.63
+	 RooRealVar decay("decay","decay",0, 10);// MB: 3.39
+	 RooRealVar *alpha  = new RooRealVar("alpha","tail shift",0.101,5.);  
+	 if(choseSample==7 )
 	   {
-	     f2Svs1S.setVal(0.6);
-	     f3Svs1S.setVal(0.4);
+	     RooRealVar width("width","width",0.6, 11.);// MB 2.63
+	     if(muonpTcut1==4)
+	       {
+		 RooRealVar turnOn("turnOn","turnOn", 4.,9.2);
+	       }
 	   }
        }
+     if(whatBin==2)
+       {
+	 cout<< "pd #" << whatBin << endl;
+	 RooRealVar turnOn("turnOn","turnOn",0. ,8);
+	 RooRealVar width("width","width",0.5, 7.5);// MB 2.63
+	 RooRealVar decay("decay","decay",0, 8);// MB: 3.39
+	 RooRealVar *alpha  = new RooRealVar("alpha","tail shift",0.5,6.);  
+	 if(choseSample==7 && muonpTcut1==3.5)
+	   {
+	     RooRealVar width("width","width",0.6, 11.);// MB 2.63
+	     //   RooRealVar decay("turnOn","turnOn",0. ,8);
+	   }
+       }
+     if(whatBin==3)
+       {
+	 cout<< "pd #" << whatBin << endl;
+	 RooRealVar turnOn("turnOn","turnOn",0. ,7);
+	 RooRealVar width("width","width",0.5, 14);// MB 2.63
+	 RooRealVar decay("decay","decay",0, 9);// MB: 3.39
+	 
+       }
+     if(whatBin==4)
+       {
+	 cout<< "pd #" << whatBin << endl;
+	 RooRealVar turnOn("turnOn","turnOn",0. ,9);
+	 RooRealVar width("width","width",0.5, 10);// MB 2.63
+	 RooRealVar decay("decay","decay",0, 7);// MB: 3.39
+	 if(choseSample==7)
+	   { RooRealVar turnOn("turnOn","turnOn",0. ,8);
+	     RooRealVar decay("decay","decay",0, 12);// MB: 3.39
+	   }
+       }
+     
+     if(whatBin==6)
+       {
+	 cout<< "pd #" << whatBin << endl;
+	 RooRealVar turnOn("turnOn","turnOn",0. ,9.);
+	 RooRealVar width("width","width",0.5, 9);// MB 2.63
+	 RooRealVar decay("decay","decay",0, 7);// MB: 3.39
+       }
+     if(whatBin==7)
+       {
+	 cout<< "pd #" << whatBin << endl;
+	 RooRealVar turnOn("turnOn","turnOn",0. ,8.);
+	 RooRealVar width("width","width",0.5, 10);// MB 2.63
+	 RooRealVar decay("decay","decay",0, 7);// MB: 3.39
+	 RooRealVar *alpha  = new RooRealVar("alpha","tail shift",0.1,6.);  
+       }
+     if(whatBin==8)
+       {
+	 cout<< "pd #" << whatBin << endl;
+	 RooRealVar turnOn("turnOn","turnOn",0. ,8.);
+	 RooRealVar width("width","width",0.5, 15);// MB 2.63
+	 RooRealVar decay("decay","decay",0, 10);// MB: 3.39
+	 RooRealVar *alpha  = new RooRealVar("alpha","tail shift",0.1,6.);  
+       }
+     
+     if(whatBin==9)
+       {
+	 cout<< "pd #" << whatBin << endl;
+	 RooRealVar turnOn("turnOn","turnOn",0. ,8.);
+	 RooRealVar width("width","width",0.5, 15);// MB 2.63
+	 RooRealVar decay("decay","decay",0, 10);// MB: 3.39
+	 RooRealVar *alpha  = new RooRealVar("alpha","tail shift",0.1,6.);  
+	 if(choseSample==7 && muonpTcut1==4)
+	   {
+	     RooRealVar turnOn("turnOn","turnOn", 0.,10.);
+	   }
+       }
+     
    }
+ 
+ 
  width.setConstant(false);
  decay.setConstant(false);
  turnOn.setConstant(false);
@@ -609,11 +799,8 @@ switch (bkgdModel)
     RooAbsPdf *pdf_combinedbkgd            = new  RooGenericPdf("bkgPdf","bkgPdf",
 								"exp(-@0/decay)*(TMath::Erf((@0-turnOn)/width)+1)",
 								RooArgList(*mass,turnOn,width,decay));
-    // RooAbsPdf  *pdf_combinedbkgd   = new RooAddPdf("pdf_combinedbkgd","total combined background pdf",
-    // 						     RooArgList(*thisPdf),
-    // 						     RooArgList(*nbkgd));
     break;
-      
+     
   case 4 : //use pol 2 to fit the OS directly
     bkg_a3->setConstant(true);
     RooAbsPdf  *pdf_combinedbkgd  = new RooChebychev("bkgPdf","bkgPdf",
@@ -639,39 +826,43 @@ switch (bkgdModel)
     cout<<"Donno what you are talking about! Pick another fit option!"<<endl;
     break;
   }
-// mass->setRange("low",7,9);
-// mass->setRange("hi",9,14);
-  //###### the nominal fit with default pdf 
-  RooFitResult* fit_2nd;// fit results
-  RooAbsPdf  *pdf; // nominal PDF
-  RooAbsPdf  *pdf_unconstr;
-  if (doConstrainFit) 
-    {
-      pdf_unconstr   = new RooAddPdf ("pdf_unconstr","total signal+background pdf",
-				      RooArgList(*sig1S,*sig2S,*sig3S,*pdf_combinedbkgd),
-				      RooArgList(*nsig1f,*nsig2f,*nsig3f,*nbkgd));
-      RooProdPdf *pdf            = new RooProdPdf ("pdf","total constr pdf",
-						   RooArgSet(*pdf_unconstr,*turnOn_constr,*width_constr,*decay_constr,*nLikesignbkgd_constr));
-      fit_2nd      = pdf->fitTo(*data,Constrained(),Save(kTRUE),Extended(kTRUE),Minos(doMinos),NumCPU(4));
-    }
-  else 
-    {
-RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
-					     RooArgList(*sig1S,*sig2S,*sig3S,*pdf_combinedbkgd),
-					     RooArgList(*nsig1f,*nsig2f,*nsig3f,*nbkgd));
- fit_2nd       = pdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),Minos(doMinos));
-    }
+
+//###### the nominal fit with default pdf 
+ RooFitResult* fit_2nd;// fit results
+ RooAbsPdf  *pdf; // nominal PDF
+ RooAbsPdf  *pdf_unconstr;
+ if (doConstrainFit) 
+   {
+     pdf_unconstr   = new RooAddPdf ("pdf_unconstr","total signal+background pdf",
+				     RooArgList(*sig1S,*sig2S,*sig3S,*pdf_combinedbkgd),
+				     RooArgList(*nsig1f,*nsig2f,*nsig3f,*nbkgd));
+     RooProdPdf *pdf            = new RooProdPdf ("pdf","total constr pdf",
+						  RooArgSet(*pdf_unconstr,*turnOn_constr,*width_constr,*decay_constr,*nLikesignbkgd_constr));
+     fit_2nd      = pdf->fitTo(*data,Constrained(),Save(kTRUE),Extended(kTRUE),Minos(doMinos),NumCPU(4));
+   }
+ else 
+   {
+     RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
+						  RooArgList(*sig1S,*sig2S,*sig3S,*pdf_combinedbkgd),
+						  RooArgList(*nsig1f,*nsig2f,*nsig3f,*nbkgd));
+     if(choseSample==8)
+       {     
+	 RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
+						      RooArgList(*sig1S),
+						      RooArgList(*nsig1f));
+       }
+     fit_2nd       = pdf->fitTo(*data,Save(kTRUE),Extended(kTRUE),Minos(doMinos));
+   }
 
   // *************************************************** plotting
   TCanvas c; c.cd();
   int nbins = ceil((mass_h-mass_l)/binw); 
   RooPlot* frame = mass->frame(Bins(nbins),Range(mass_l,mass_h));
- 
   data->plotOn(frame,Name("theData"),MarkerSize(0.8));
-   //pdf->plotOn(frame,Name("thePdf")); // signal + bkg pdf
+  //pdf->plotOn(frame,Name("thePdf")); // signal + bkg pdf
   pdf->plotOn(frame,Name("thePdf")); /// change this, to see errrors
   RooArgSet * pars = pdf->getParameters(data);
-
+  if(choseSample!=8){
   //draw the fit lines and save plots
     switch(bkgdModel){
     case 1:
@@ -705,12 +896,21 @@ RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
     default:
       break;
     }
+  // need this re-plotting, so the pulls pick the right fit
+  data->plotOn(frame,Name("theData"),MarkerSize(0.8)); 
+  pdf->plotOn(frame,Name("thePdf")); // signal + bkg pdf
+  }
+ else if(choseSample==8){
+   pdf->plotOn(frame,Components("cb1S_2"),Name("theFitPDF_mca"),LineColor(kOrange));
+   pdf->plotOn(frame,Components("cb1S_1"),Name("theFitPDF_mcb"),LineColor(kGray));
+   pdf->plotOn(frame,Name("thePdf"),LineColor(kBlue)); 
+ }
   //pdf->plotOn(frame,Components("pdf_combinedbkgd"),Name("theBkg"),LineStyle(kDashed));// total bkg, blue
   // need this re-plotting, so the pulls pick the right fit
- data->plotOn(frame,Name("theData"),MarkerSize(0.8)); 
- pdf->plotOn(frame,Name("thePdf")); // signal + bkg pdf
+  data->plotOn(frame,Name("theData"),MarkerSize(0.8)); 
+  pdf->plotOn(frame,Name("thePdf")); // signal + bkg pdf
   //----------------------------------------------------------------------  
-   frame->SetTitle( "" );
+  frame->SetTitle("");
   frame->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
   frame->GetXaxis()->CenterTitle(kTRUE);
   frame->GetYaxis()->SetTitleOffset(1.3);
@@ -722,16 +922,15 @@ RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
   latex1.SetNDC();
   // latex1.DrawLatex(0.55,1.-0.05*3,"CMS Preliminary");
   // latex1.DrawLatex(0.55,1.-0.05*4,Form("%s",choseSampleLegend[choseSample]));
-  // 
   
   // latex1.SetTextSize(0.035);
-  // if(choseSample!=1 && choseSample!=2) latex1.DrawLatex(0.2,1.-0.05*3,Form("Cent. %d-%d%%",centrality_min,centrality_max));
-  // // latex1.DrawLatex(0.2,1.-0.05*4,Form("%.2f< y <%.2f",upsYCut_min,upsYCut_max)); 
+  //  if(choseSample!=1 && choseSample!=2) latex1.DrawLatex(0.2,1.-0.05*3,Form("Cent. %d-%d%%",centrality_min,centrality_max));
+  // latex1.DrawLatex(0.2,1.-0.05*4,Form("%.2f< y <%.2f",upsYCut_min,upsYCut_max)); 
   // latex1.DrawLatex(0.2,1.-0.05*4,Form("|y_{CM}| < 1")); 
-  // latex1.DrawLatex(0.2,1.-0.05*5.5,Form("p_{T}^{#mu} > %.0f GeV/c",muonpTcut));
+  // latex1.DrawLatex(0.2,1.-0.05*5.5,Form("p_{T}^{#mu} > %.0f GeV/c",muonpTcut1));
   
   // c.SaveAs(figsDir+figName_+paramOn_+".png");
-  // c.SaveAs(figsDir+figName_+paramOn_+".pdf");
+  //  c.SaveAs(figsDir+figName_+paramOn_+".pdf");
 
   // -------------------------------------- plot pulls
   TCanvas cm("cm","cm");
@@ -740,77 +939,104 @@ RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
   pPad1->SetBottomMargin(0.00);
   pPad1->Draw();
   pPad1->cd();
-  if(plotpars) 
-       pdf->paramOn(frame,Layout(0.15,0.6,0.4),Layout(0.6,0.935,0.97));
-  frame->Draw();
+  if(plotpars){ 
+    if(choseSample!=8){pdf->paramOn(frame,Layout(0.15,0.6,0.4),Layout(0.6,0.935,0.97));}
+    frame->Draw();
+    latex1.SetTextSize(0.035);
+    latex1.DrawLatex(0.15,1.-0.05*1.5,Form("%s",choseSampleLegend[choseSample]));
+    latex1.DrawLatex(0.15,1.-0.05*2.5,Form("%s",choseSampleLumi[choseSample])); 
+    if(choseSample!=1 && choseSample!=2 && choseSample!=7) latex1.DrawLatex(0.15,1.-0.05*3.5,Form("Cent. %d-%d%%",centMin,centMax));
+    latex1.DrawLatex(0.15,1.-0.05*4.5,Form("|y| < 2.4")); 
+    latex1.DrawLatex(0.15,1.-0.05*5.5,Form("p_{T}^{#mu1} > %.1f GeV/c",muonPtCut_min1));
+    latex1.DrawLatex(0.15,1.-0.05*6.5,Form("p_{T}^{#mu2} > %.1f GeV/c",muonPtCut_min2));
+    latex1.DrawLatex(0.15,1.-0.05*7.5,Form("%.1f < p_{T}^{#Upsilon} < %.1f",dimuPtMin,dimuPtMax));
+     cm.cd(0);
+    TPad *pPad2 = new TPad("pPad2","pPad2",0.05,0.05,0.95,0.35);
+    pPad2->SetTopMargin(0.0);
+    pPad2->Draw();
+    pPad2->cd();
+    // **************** create pulls; change the chi2 calculation also
+    double chi2FromRoo = frame->chiSquare(fit_2nd->floatParsFinal().getSize());
+    cout<<"!!!!!!!! chi2 from simple pull= "<<frame->chiSquare()<<"\t chi2 from RooFit= "<<chi2FromRoo <<endl;
+    RooHist *phPullm = frame->pullHist(0,0,true); // this calcualtes the pulls taking the integral of the fit in each bin, instead of the value in the middle of the bid
+    phPullm->SetName("phPullm");
+    double *ypull     = phPullm->GetY();
+    
+    TH1 *phData      = data->createHistogram("invariantMass",nbins);
+    double Chi2       = 0;
+    int nFullBinsPull = 0;
+    for (int i=0; i < nbins; i++) 
+      {
+        if (phData->GetBinContent(i) == 0) continue;
+        nFullBinsPull++;
+        Chi2 = Chi2 + pow(ypull[i],2);
+      }
+    
+    // for writing on canvas
+    int nFitParam     = fit_2nd->floatParsFinal().getSize();
+    int Dof           = nFullBinsPull - nFitParam;
+    double UnNormChi2 = Chi2;
+    Chi2             /= (nFullBinsPull - nFitParam);
+    
+    cout<<"!!!!! nFullBinsPull="<<nFullBinsPull<<"\tnFitParam="<<nFitParam<<endl;
+    // draw pulls
+    pPad2->cd();
+    double mFrameMax = 0;
+    RooPlot* prpFramePull = mass->frame(Title("Pull"),Bins(nbins),Range(mass_l,mass_h));
+    prpFramePull->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
+    prpFramePull->GetXaxis()->CenterTitle(kTRUE);
+    prpFramePull->GetYaxis()->SetTitleOffset(1.3);
+    prpFramePull->GetYaxis()->SetTitle("Pull");
+    prpFramePull->addPlotable(phPullm,"PX");
  
-  latex1.SetTextSize(0.035);
-  latex1.DrawLatex(0.15,1.-0.05*1.5,Form("%s",choseSampleLegend[choseSample]));
-  latex1.DrawLatex(0.15,1.-0.05*2.5,Form("%s",choseSampleLumi[choseSample])); 
-  if(choseSample!=1 && choseSample!=2 && choseSample!=7) latex1.DrawLatex(0.15,1.-0.05*6.5,Form("Cent. %d-%d%%",centMin,centMax));
-  latex1.DrawLatex(0.15,1.-0.05*3.5,Form("|y| < 2.4")); 
-  // latex1.DrawLatex(0.15,1.-0.05*4.5,Form("p_{T}^{#mu} > %.1f GeV/c",muonpTcut));
-  latex1.DrawLatex(0.15,1.-0.05*5.5,Form("%.1f < p_{T}^{#Upsilon} < %.1f",dimuPtMin,dimuPtMax));
-  cm.cd(0);
-  TPad *pPad2 = new TPad("pPad2","pPad2",0.05,0.05,0.95,0.35);
-  pPad2->SetTopMargin(0.0);
-  pPad2->Draw();
-  pPad2->cd();
-  // **************** create pulls; change the chi2 calculation also
-  double chi2FromRoo = frame->chiSquare(fit_2nd->floatParsFinal().getSize());
-  cout<<"!!!!!!!! chi2 from simple pull= "<<frame->chiSquare()<<"\t chi2 from RooFit= "<<chi2FromRoo <<endl;
-  RooHist *phPullm = frame->pullHist(0,0,true); // this calcualtes the pulls taking the integral of the fit in each bin, instead of the value in the middle of the bid
-  phPullm->SetName("phPullm");
-  double *ypull     = phPullm->GetY();
+    if (prpFramePull->GetMinimum()*-1 > prpFramePull->GetMaximum()) mFrameMax = prpFramePull->GetMinimum()*-1;
+    else mFrameMax = prpFramePull->GetMaximum();
+    prpFramePull->SetMaximum(mFrameMax); 
+    prpFramePull->SetMinimum(-1*mFrameMax); 
+    prpFramePull->Draw();
 
-  TH1 *phData      = data->createHistogram("invariantMass",nbins);
-  double Chi2       = 0;
-  int nFullBinsPull = 0;
-  for (int i=0; i < nbins; i++) 
-    {
-      if (phData->GetBinContent(i) == 0) continue;
-      nFullBinsPull++;
-      Chi2 = Chi2 + pow(ypull[i],2);
-    }
-
-  // for writing on canvas
-  int nFitParam     = fit_2nd->floatParsFinal().getSize();
-  int Dof           = nFullBinsPull - nFitParam;
-  double UnNormChi2 = Chi2;
-  Chi2             /= (nFullBinsPull - nFitParam);
-
-  cout<<"!!!!! nFullBinsPull="<<nFullBinsPull<<"\tnFitParam="<<nFitParam<<endl;
-  // draw pulls
-  pPad2->cd();
-  double mFrameMax = 0;
-  RooPlot* prpFramePull = mass->frame(Title("Pull"),Bins(nbins),Range(mass_l,mass_h));
-  prpFramePull->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
-  prpFramePull->GetXaxis()->CenterTitle(kTRUE);
-  prpFramePull->GetYaxis()->SetTitleOffset(1.3);
-  prpFramePull->GetYaxis()->SetTitle("Pull");
-  prpFramePull->addPlotable(phPullm,"PX");
- 
-  if (prpFramePull->GetMinimum()*-1 > prpFramePull->GetMaximum()) mFrameMax = prpFramePull->GetMinimum()*-1;
-  else mFrameMax = prpFramePull->GetMaximum();
-  prpFramePull->SetMaximum(mFrameMax); 
-  prpFramePull->SetMinimum(-1*mFrameMax); 
-  prpFramePull->Draw();
-
-  latex1.SetTextSize(0.085);
-  double myChi2 = chi2FromRoo*Dof;
-  latex1.DrawLatex(0.7,1.-0.05*3.5,Form("#chi^{2}/ndf = %2.1f/%d",myChi2,Dof));
+    latex1.SetTextSize(0.085);
+    double myChi2 = chi2FromRoo*Dof;
+    latex1.DrawLatex(0.7,1.-0.05*3.5,Form("#chi^{2}/ndf = %2.1f/%d",myChi2,Dof));
    
-  //cm.SaveAs(figsDir+figName_+paramOn_+"_pulls.png");
-  cm.SaveAs(figsDir+figName_+paramOn_+"_pulls.pdf");
+    //cm.SaveAs(figsDir+figName_+paramOn_+"_pulls.png");
+    cm.SaveAs(figsDir+figName_+paramOn_+"_pulls.pdf");
 
-   //-------------------------------
-  // print the final pdf parameters!
+    //-------------------------------
+    // print the final pdf parameters!
+    mass->setRange("Range1S",8.8,9.7);
+    if(choseSample!=8){
+      RooAbsReal* bkgd1S_integral = pdf_combinedbkgd->createIntegral(*mass,NormSet(*mass),Range("Range1S"));
+      RooAbsReal* sig1S_integral = sig1S->createIntegral(*mass,NormSet(*mass),Range("Range1S"));
+      float bkgd1S_val = bkgd1S_integral->getVal()*nbkgd->getVal();
+      float bkgd1S_error = bkgd1S_integral->getVal()*nbkgd->getError();
+      float sig1S_val = sig1S_integral->getVal()*nsig1f->getVal();
+      float sig1S_error = sig1S_integral->getVal()*nsig1f->getError();
+    }
+    cout << "bkgd 1S: "<<bkgd1S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd1S_integral->getVal()*nbkgd->getError() <<", signal 1S: "<<sig1S_integral->getVal()*nsig1f->getVal()<<" +/- "<< sig1S_integral->getVal()*nsig1f->getError() << endl; }
+  else if(choseSample==8)
+    {
+      RooAbsReal* sig1S_integral = sig1S->createIntegral(*mass,NormSet(*mass),Range("Range1S"));
+      cout <<"MC 1S: "<<sig1S_integral->getVal()*nsig1f->getVal()<<" +/- "<< sig1S_integral->getVal()*nsig1f->getError() <<" ,n= "<<npow->getVal()<<" +/- "<<npow->getError()<<" ,a= "<<alpha->getVal()<<" +/- "<<alpha->getError()<<" ,sigmaTotal= "<<sigmaFraction->getVal()*sigma1->getVal() +(1-sigmaFraction->getVal()) *sigmaGaus->getVal()<<" +/- "<<sigmaGaus->getVal()*sqrt((sigmaFraction->getError() * sigmaFraction->getError())/(sigmaFraction->getVal() * sigmaFraction->getVal()) + (sigma1->getError() * sigma1->getError())/(sigma1->getVal() * sigma1->getVal()) ) << endl;
+    }
   
+  
+  mass->setRange("Range1S",9.7,10.6);
+  if(choseSample!=8){
+    RooAbsReal* bkgd2S_integral = pdf_combinedbkgd->createIntegral(*mass,NormSet(*mass),Range("Range2S"));
+    RooAbsReal* sig2S_integral = sig2S->createIntegral(*mass,NormSet(*mass),Range("Range2S"));
+  }
+  // cout << "bkgd 2S: "<<bkgd2S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd2S_integral->getVal()*nbkgd->getError() <<", signal 2S: "<<sig2S_integral->getVal()*f2Svs1S->getVal()*nsig1f->getVal()<<" +/- "<< sig2S_integral->getVal()*f2Svs1S->getVal()*(sqrt(f2Svs1S->getError()*f2Svs1S->getError()/f2Svs1S->getVal()*f2Svs1S->getVal() + nsig1f->getError()*nsig1f->getError()/nsig1f->getVal()*nsig1f->getVal())) << endl; }
+  // else if(choseSample==8)
+  //   {
+  // 	 RooAbsReal* sig2S_integral = sig2S->createIntegral(*mass,NormSet(*mass),Range("Range2S"));
+  // 	 cout <<"MC 2S: "<<sig2S_integral->getVal()*f2Svs1S->getVal()*nsig1f->getVal()<<" +/- "<< sig2S_integral->getVal()*f2Svs1S->getVal()*(sqrt(f2Svs1S->getError()*f2Svs1S->getError()/f2Svs1S->getVal()*f2Svs1S->getVal() + nsig1f->getError()*nsig1f->getError()/nsig1f->getVal()*nsig1f->getVal())) <<" ,n= "<<npow->getVal()<<" +/- "<<npow->getError()<<" ,a= "<<alpha->getVal()<<" +/- "<<alpha->getError()<<" ,sigmaTotal= "<<sigmaFraction->getVal()*sigma1->getVal() +(1-sigmaFraction->getVal()) *sigmaGaus->getVal()<<" +/- "<<sigmaGaus->getVal()*sqrt((sigmaFraction->getError() * sigmaFraction->getError())/(sigmaFraction->getVal() * sigmaFraction->getVal()) + (sigma1->getError() * sigma1->getError())/(sigma1->getVal() * sigma1->getVal()) ) << endl;
+  //   }
   // Print fit results 
   cout << endl << "figure name: "<< figName_ << endl;
   cout << "the nominal fit with the default pdf " << endl ;
-  //cout<<"p-value = "<< TMath::Prob(UnNormChi2,Dof)<<endl;
-
+  cout << "p-value = "<< TMath::Prob(UnNormChi2,Dof)<<endl;
+  
   // ------ calculate the single yields
   // if (choseSample<3)
   //   { RooRealVar* n1s_fitresult    = (RooRealVar*)fit_2nd->floatParsFinal().find("N_{#Upsilon(1S)}");
@@ -849,14 +1075,19 @@ RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
   float baseNll = fit_2nd->minNll();
   float estimatedDistance2Minimum = fit_2nd->edm();
   fit_2nd->Print();
-
+  
   // write out the fitting params
   string outParameters = outDatsDir+"/"+figName_+".txt";
+  string outParameters_forNote = outDatsDir+"/"+figName_+"forNote.txt";
   cout<<"Output file: " << outParameters<<endl;
   ofstream outfileFitResults;
+  ofstream outfileFitResults_forNote;
   outfileFitResults.open(outParameters.c_str(), ios_base::out);
-
+  
   fit_2nd->printMultiline(cout,1) << endl;
+  
+  
+  outfileFitResults_forNote.open(outParameters_forNote.c_str(), ios_base::out);
   
   
   // cout << "N2S= "<< myn2s << "\t err= " << myn2s_err <<endl;
@@ -866,49 +1097,60 @@ RooAbsPdf  *pdf             = new RooAddPdf ("pdf","total p.d.f.",
   //   cout << "N3S= "<< myn3s << "\t err= " << myn3s_err <<endl;
   // }
   // outfileFitResults <<endl;
-  switch(choseFitParams) {
-  case 0:
-    outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<nsig2f->getVal()<<" "<<nsig2f->getError()<<" "<<nsig3f->getVal()<<" "<<nsig3f->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
-    break;
-  case 1 :
- 
-  outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<<endl;
-  break;
-  case 2 :
-     outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f23vs1S->getVal()<<" "<<f23vs1S->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
-     break;
-  case 3 :
-    outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<f3Svs2S->getVal()<<" "<<f3Svs2S->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<<  endl;
-     break;
-  default : break;
-    
-   
+  
+  if(choseSample!=8){
+    switch(choseFitParams) {
+    case 0:
+      outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<nsig2f->getVal()<<" "<<nsig2f->getError()<<" "<<nsig3f->getVal()<<" "<<nsig3f->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
+      outfileFitResults_forNote<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<nsig2f->getVal()<<" "<<nsig2f->getError()<<" "<<nsig3f->getVal()<<" "<<nsig3f->getError()<<" "<< bkgd1S_val <<" +/- "<< bkgd1S_error <<", signal 1S: "<<sig1S_val <<" +/- "<< sig1S_error <<" "<< bkgd2S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd2S_integral->getVal()*nbkgd->getError() <<", signal 2S: "<<sig2S_integral->getVal()*nsig2f->getVal()<<" +/- "<< sig2S_integral->getVal()*nsig2f->getError() << " " << mass->getVal() <<" "<<mass->getError()<<" "<<endl; 
+      break;
+    case 1 :
+      
+      outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<<endl;
+      outfileFitResults_forNote<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<< " "<< bkgd1S_val <<" +/- "<< bkgd1S_error <<", signal 1S: "<<sig1S_val <<" +/- "<< sig1S_error <<" "<<bkgd2S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd2S_integral->getVal()*nbkgd->getError() <<", signal 2S: "<<sig2S_integral->getVal()*f2Svs1S->getVal()*nsig1f->getVal()<<" +/- "<< sig2S_integral->getVal()*f2Svs1S->getVal()*(sqrt(f2Svs1S->getError()*f2Svs1S->getError()/f2Svs1S->getVal()*f2Svs1S->getVal() + nsig1f->getError()*nsig1f->getError()/nsig1f->getVal()*nsig1f->getVal()))<< " " << mass->getVal() <<" "<<mass->getError()<<" "<< endl; 
+      break;
+    case 2 :
+      outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f23vs1S->getVal()<<" "<<f23vs1S->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
+      outfileFitResults_forNote<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f23vs1S->getVal()<<" "<<f23vs1S->getError()<<" "<< bkgd1S_val <<" +/- "<< bkgd1S_error <<", signal 1S: "<<sig1S_val <<" +/- "<< sig1S_error  <<" "<<bkgd2S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd2S_integral->getVal()*nbkgd->getError() <<", signal 2S: "<<sig2S_integral->getVal()*f2Svs1S->getVal()*nsig1f->getVal()<<" +/- "<< sig2S_integral->getVal()*f2Svs1S->getVal()*(sqrt(f2Svs1S->getError()*f2Svs1S->getError()/f2Svs1S->getVal()*f2Svs1S->getVal() + nsig1f->getError()*nsig1f->getError()/nsig1f->getVal()*nsig1f->getVal()))<< " " << mass->getVal() <<" "<<mass->getError()<<" "<< endl; 
+      break;
+    case 3 :
+      outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<f3Svs2S->getVal()<<" "<<f3Svs2S->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<<  endl;
+      outfileFitResults_forNote<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<bkgd1S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd1S_integral->getVal()*nbkgd->getError() <<", signal 1S: "<<sig1S_integral->getVal()*nsig1f->getVal()<<" +/- "<< sig1S_integral->getVal()*nsig1f->getError() <<" "<<bkgd2S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd2S_integral->getVal()*nbkgd->getError() <<", signal 2S: "<<sig2S_integral->getVal()*f2Svs1S->getVal()*nsig1f->getVal()<<" +/- "<< sig2S_integral->getVal()*f2Svs1S->getVal()*(sqrt(f2Svs1S->getError()*f2Svs1S->getError()/f2Svs1S->getVal()*f2Svs1S->getVal() + nsig1f->getError()*nsig1f->getError()/nsig1f->getVal()*nsig1f->getVal()))<< " " << mass->getVal() <<" "<<mass->getError()<<" "<< endl; 
+      break;
+      
+    default : break;
+      
+      
+    }
   }
-
- // << "FreeParam= "<< nFitParam <<" "<<baseNll<< " " <<estimatedDistance2Minimum<< " " << 2*nFitParam+2*baseNll<< " " << UnNormChi2 << " " << Dof<<" "<< TMath::Prob(UnNormChi2,Dof) << " " << endl;
- //  outfileFitResults <<endl;
-
- //  outfileFitResults<< "alpha= "<<alpha->printValue(outfileFitResults)  << "\t npow= "<<npow->printValue(outfileFitResults)<< "\t sigma1= "<<sigma1->printValue(outfileFitResults) << "\t turnOn= "<<turnOn.printValue(outfileFitResults) <<endl;
-
- //  outfileFitResults << "rooFitChSquare= "<< chi2FromRoo*Dof <<endl;
-outfileFitResults.close();
-// ConfidencInterval(0.683, f3Svs1S, data, pdf);
- 
+  else if(choseSample==8){
+    outfileFitResults_forNote <<figName_<<"MC 1S: "<<sig1S_integral->getVal()*nsig1f->getVal()<<" +/- "<< sig1S_integral->getVal()*nsig1f->getError() <<" ,n= "<<npow->getVal()<<" +/- "<<npow->getError()<<" ,a= "<<alpha->getVal()<<" +/- "<<alpha->getError()<<" ,sigmaTotal= "<<sigmaFraction->getVal()*sigma1->getVal() +(1-sigmaFraction->getVal()) *sigmaGaus->getVal()<<" +/- "<<sigmaGaus->getVal()*sqrt((sigmaFraction->getError() * sigmaFraction->getError())/(sigmaFraction->getVal() * sigmaFraction->getVal()) + (sigma1->getError() * sigma1->getError())/(sigma1->getVal() * sigma1->getVal()) ) << endl;
+  }
+  
+  // << "FreeParam= "<< nFitParam <<" "<<baseNll<< " " <<estimatedDistance2Minimum<< " " << 2*nFitParam+2*baseNll<< " " << UnNormChi2 << " " << Dof<<" "<< TMath::Prob(UnNormChi2,Dof) << " " << endl;
+  //  outfileFitResults <<endl;
+  
+  //  outfileFitResults<< "alpha= "<<alpha->printValue(outfileFitResults)  << "\t npow= "<<npow->printValue(outfileFitResults)<< "\t sigma1= "<<sigma1->printValue(outfileFitResults) << "\t turnOn= "<<turnOn.printValue(outfileFitResults) <<endl;
+  
+  //  outfileFitResults << "rooFitChSquare= "<< chi2FromRoo*Dof <<endl;
+  outfileFitResults.close();
+  outfileFitResults_forNote.close();
+  // ConfidencInterval(0.683, f3Svs1S, data, pdf);
+  
 }
-
 
 //_______________________________________________________________________
 double computeSingle(RooRealVar& x, RooRealVar& y) 
 {
   // pass the 1S(x) and xS/1S(y) ratios and calcualte the xS yield
-   return x.getVal() * y.getVal();
+  return x.getVal() * y.getVal();
 }
 
 
 double computeSingleError(RooRealVar& x, RooRealVar& y, double correlation = 0.) 
 {
   // pass the 1S(x) and xS/1S(y) ratios and calcualte the xS yield error
-
+  
   double err2 = (x.getError()*x.getError())/(x.getVal()*x.getVal()) 
     + (y.getError()*y.getError())/(y.getVal()*y.getVal()) 
     + 2.*(x.getError()*y.getError())/(x.getVal()*y.getVal())*correlation;

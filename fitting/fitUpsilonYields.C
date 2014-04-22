@@ -86,7 +86,8 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
 		      float muonEtaMax  = 1, 
 		      float dimuYMin    = -1., 
 		      float dimuYMax    = 1.,
-		      double muonpTcut  = 4, //single muon pT cut
+		      double muonpTcut1  = 3.5, //single muon pT cut
+		      double muonpTcut2 = 4, //1 should always be lower than 2!
 		      bool plotBkg      = 0, //0: hide LS or trkRot; 1: plot LS or trkRot data points and fit lines;
 		      bool doTrkRot     = 0, //0: use LS;   1: use track rotation
 		      bool doConstrainFit   = 0,  //1: use constrain method
@@ -106,6 +107,11 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
   if (centralityMin==28) binw=0.2;
   // input file
   TString finput;
+
+  double muonEtaCut_min = muonEtaMin;
+  double muonEtaCut_max = muonEtaMax; 
+  double muonPtCut_min1 = muonpTcut1;
+  double muonPtCut_min2 = muonpTcut2;
   switch (choseSample) 
     {
    
@@ -116,8 +122,7 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
       fixFSR    = 0;
     }
   //
-  double muonEtaCut_min = muonEtaMin;
-  double muonEtaCut_max = muonEtaMax; 
+
   // kinematic cuts
 
   cout << "Muon Eta Min is: "<< muonEtaMin << endl;
@@ -134,6 +139,7 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
       binw=0.05;
       break;
     case 3://PbPb @ 2.76TeV regit
+      mass_l = 8.;
       finput   = "../dimuonTree_upsiMiniTree_aa276tev_regitreco_glbglb_Runa_trigBit1_allTriggers0_pt4.root"; // cent 0-40 "cm"
       //finput = "./dimuonTree_largeAccCut_test24112013_merged.root";//new acc cut
       //finput = "../dimuonTree_upsiMiniTree_AA2p76tev_ptmuSpecial_nov25_2013_trigBit1_allTriggers1_testNoCut.root"; //no cuts !!!
@@ -159,15 +165,19 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
     default:
       cout<<"You don't know what you are doing! Pick one of the available datasets in the choseSampleCases[] array"<<endl;
       break;
-   }
+    }
+  double massRange1S_l = 8.75;
+  double massRange1S_h = 9.75;
+  double massRange23S_l = 9.75;
+  double massRange23S_h = 10.5;
   double upsYCut_min    = dimuYMin;
   double upsYCut_max    = dimuYMax;
  
   int centrality_max = centralityMax; 
   int centrality_min = centralityMin; 
 
-  TString cut_ap(Form("(%d<=Centrality && Centrality<%d) && (%.2f<muPlusEta && muPlusEta < %.2f) && (%.2f<muMinusEta && muMinusEta < %.2f) && (%.2f<upsRapidity && upsRapidity<%.2f) && (vProb > %.2f) ",centrality_min,centrality_max,muonEtaMin,muonEtaMax,muonEtaMin,muonEtaMax,upsYCut_min,upsYCut_max,vProbPick));
- 
+  TString cut_ap(Form("(%d<=Centrality && Centrality<%d) && (%.2f<muPlusEta && muPlusEta < %.2f) && (%.2f<muMinusEta && muMinusEta < %.2f) && (%.2f<upsRapidity && upsRapidity<%.2f) && (vProb > %.2f) &&((muPlusPt > %.2f && muMinusPt > %.2f) || (muPlusPt > %.2f && muMinusPt > %.2f))",centrality_min,centrality_max,muonEtaMin,muonEtaMax,muonEtaMin,muonEtaMax,upsYCut_min,upsYCut_max,vProbPick,muonPtCut_min1,muonPtCut_min2,muonPtCut_min2,muonPtCut_min1));
+
   int centMin = centrality_min;
   int centMax = centrality_max;
   if(choseSample==3 || choseSample==6) 
@@ -181,9 +191,9 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
   // if param are on, this gets filled in the naming
   TString paramOn_("");
   
-  TString figName_(Form("%s_%s_cent%d-%d_bkgModel%d_muonEta%.2f%.2f_dimuY%.2f%.2f_trkRot%d_constrain%d_fsr%d_sigma%d_ref%d",
+  TString figName_(Form("%s_%s_cent%d-%d_bkgModel%d_muonEta%.2f%.2f_muonPt%.2f-%.2f_dimuY%.2f%.2f_trkRot%d_constrain%d_fsr%d_sigma%d_ref%d_massLow%.1f",
 			  outFilePrefix,choseSampleCase,centMin,centMax,
-			  bkgdModel, muonEtaMin,muonEtaMax,upsYCut_min,upsYCut_max,doTrkRot,doConstrainFit,fixFSR,fixSigma1,useRef));
+			bkgdModel, muonEtaMin,muonEtaMax,muonPtCut_min1,muonPtCut_min2,upsYCut_min,upsYCut_max,doTrkRot,doConstrainFit,fixFSR,fixSigma1,useRef,mass_l));
   // output file names
   if(narrowMass)
     {
@@ -216,7 +226,7 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
   figName_.ReplaceAll("-","M");
   figName_.ReplaceAll(".","");
 
-  cout<<"Fitting: y["<< upsYCut_min <<","<<upsYCut_max<<"] and centrality ["<<centrality_min<<","<<centrality_max<<"]!!!!"<<endl;
+  cout<<"Fitting: y["<< upsYCut_min <<","<<upsYCut_max<<"] , muPt > ["<< muonPtCut_min1<<","<<muonPtCut_min2<<"] and centrality ["<<centrality_min<<","<<centrality_max<<"]!!!!"<<endl;
   cout << "oniafitter processing"
        << "\n\tInput:  \t" << finput
        << "\n\tOutput: \t" << figName_
@@ -238,8 +248,8 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
   RooRealVar* QQsign     = new RooRealVar("QQsign",  "QQsign"  ,-1,5);
   RooRealVar* Centrality = new RooRealVar("Centrality","Centrality",0,100);
    
-  RooRealVar* muPlusPt   = new RooRealVar("muPlusPt","muPlusPt",muonpTcut,50);
-  RooRealVar* muMinusPt  = new RooRealVar("muMinusPt","muMinusPt",muonpTcut,50);
+  RooRealVar* muPlusPt   = new RooRealVar("muPlusPt","muPlusPt",muonPtCut_min1,100);
+  RooRealVar* muMinusPt  = new RooRealVar("muMinusPt","muMinusPt",muonPtCut_min1,100);
   RooRealVar* muPlusEta  = new RooRealVar("muPlusEta","muPlusEta",  -2.4,2.4);
   RooRealVar* muMinusEta = new RooRealVar("muMinusEta","muMinusEta",-2.4,2.4);
   RooRealVar* runNumber  = new RooRealVar("runNb",  "runNb",150000, 222000);
@@ -486,8 +496,8 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
  
 
  // *************************************************** bkgModel
-  RooRealVar turnOn("turnOn","turnOn", 6., 14.);
-  RooRealVar width("width","width", 2., 20.);// MB 2.63
+  RooRealVar turnOn("turnOn","turnOn", 4., 40.);
+  RooRealVar width("width","width", 1., 40.);// MB 2.63
   RooRealVar decay("decay","decay", 0, 10.);// MB: 3.39
 
   width.setConstant(false);
@@ -667,6 +677,7 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
   //pdf->plotOn(frame,Components("pdf_combinedbkgd"),Name("theBkg"),LineStyle(kDashed));// total bkg, blue
   // need this re-plotting, so the pulls pick the right fit
   pdf->plotOn(frame,Name("thePdf")); // signal + bkg pdf
+  data->plotOn(frame,Name("theData"),MarkerSize(0.8));
   //----------------------------------------------------------------------  
    frame->SetTitle( "" );
   frame->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
@@ -674,7 +685,7 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
   frame->GetYaxis()->SetTitleOffset(1.3);
   frame->Draw();
   // cout<<"Chi2 value is: "<< frame->chiSquare("pdf","data",fit_2nd->floatParsFinal().getSize());
-
+ 
   //plot parameters
   TLatex latex1;
   latex1.SetNDC();
@@ -705,9 +716,10 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
   latex1.SetTextSize(0.035);
   latex1.DrawLatex(0.15,1.-0.05*1.5,Form("%s",choseSampleLegend[choseSample]));
   latex1.DrawLatex(0.15,1.-0.05*2.5,Form("%s",choseSampleLumi[choseSample])); 
-  if(choseSample!=1 && choseSample!=2 &&choseSample!=7) latex1.DrawLatex(0.15,1.-0.05*5.5,Form("Cent. %d-%d%%",centMin,centMax));
+  if(choseSample!=1 && choseSample!=2 &&choseSample!=7) latex1.DrawLatex(0.15,1.-0.05*6.5,Form("Cent. %d-%d%%",centMin,centMax));
   latex1.DrawLatex(0.15,1.-0.05*3.5,Form("%.1f < y < %.1f",dimuYMin,dimuYMax)); 
-  latex1.DrawLatex(0.15,1.-0.05*4.5,Form("p_{T}^{#mu} > %.1f GeV/c",muonpTcut));
+  latex1.DrawLatex(0.15,1.-0.05*4.5,Form("p_{T}^{#mu1} > %.1f GeV/c",muonPtCut_min1));
+  latex1.DrawLatex(0.15,1.-0.05*5.5,Form("p_{T}^{#mu2} > %.1f GeV/c",muonPtCut_min2));
 
   cm.cd(0);
   TPad *pPad2 = new TPad("pPad2","pPad2",0.05,0.05,0.95,0.35);
@@ -763,7 +775,16 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
 
    //-------------------------------
   // print the final pdf parameters!
+  mass->setRange("Range1S",8.8,9.7);
+  RooAbsReal* bkgd1S_integral = pdf_combinedbkgd->createIntegral(*mass,NormSet(*mass),Range("Range1S"));
+  RooAbsReal* sig1S_integral = sig1S->createIntegral(*mass,NormSet(*mass),Range("Range1S"));
   
+  cout << "bkgd 1S: "<<bkgd1S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd1S_integral->getVal()*nbkgd->getError() <<", signal 1S: "<<sig1S_integral->getVal()*nsig1f->getVal()<<" +/- "<< sig1S_integral->getVal()*nsig1f->getError() << endl; 
+  // mass->setRange("Range23S",9.7,10.6);
+  // RooAbsReal* bkgd23S_integral = pdf_combinedbkgd->createIntegral(*mass,NormSet(*mass),Range("Range23S"));
+  // RooAbsReal* sig2S_integral = sig2S->createIntegral(*mass,NormSet(*mass),Range("Range23S"));
+  // RooAbsReal* sig3S_integral = sig3S->createIntegral(*mass,NormSet(*mass),Range("Range23S"));
+
   // Print fit results 
   cout << endl << "figure name: "<< figName_ << endl;
   cout << "the nominal fit with the default pdf " << endl ;
@@ -810,13 +831,16 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
 
   // write out the fitting params
   string outParameters = outDatsDir+"/"+figName_+".txt";
+  string outParameters_forNote = outDatsDir+"/"+figName_+"forNote.txt";
   cout<<"Output file: " << outParameters<<endl;
   ofstream outfileFitResults;
+  ofstream outfileFitResults_forNote;
   outfileFitResults.open(outParameters.c_str(), ios_base::out);
-
+ 
   fit_2nd->printMultiline(cout,1) << endl;
   
-  
+  outfileFitResults_forNote.open(outParameters_forNote.c_str(), ios_base::out);
+   
   // cout << "N2S= "<< myn2s << "\t err= " << myn2s_err <<endl;
   // if (choseSample>=3)							
   //   {  cout << "N23S= "<< myn23s << "\t err= " << myn23s_err <<endl;
@@ -833,19 +857,21 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
       outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<nsig2f->getVal()<<" "<<nsig2f->getError()<<" "<<nsig3f->getVal()<<" "<<nsig3f->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
       
     }
+    outfileFitResults_forNote<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<nsig2f->getVal()<<" "<<nsig2f->getError()<<" "<<nsig3f->getVal()<<" "<<nsig3f->getError()<<" "<<bkgd1S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd1S_integral->getVal()*nbkgd->getError() <<", signal 1S: "<<sig1S_integral->getVal()*nsig1f->getVal()<<" +/- "<< sig1S_integral->getVal()*nsig1f->getError() << endl; 
     break;
  case 1 :
- 
-  outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
-  break;
-  case 2 :
-     outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f23vs1S->getVal()<<" "<<f23vs1S->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
-     break;
-  case 3 :
-    outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<f3Svs2S->getVal()<<" "<<f3Svs2S->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
-     break;
-  default : break;
-    
+   
+   outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
+   outfileFitResults_forNote<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<bkgd1S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd1S_integral->getVal()*nbkgd->getError() <<", signal 1S: "<<sig1S_integral->getVal()*nsig1f->getVal()<<" +/- "<< sig1S_integral->getVal()*nsig1f->getError() << endl; 			break;
+ case 2 :
+   outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f23vs1S->getVal()<<" "<<f23vs1S->getError()<<" "<<npow->getVal()<<" "<<npow->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
+   outfileFitResults_forNote<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f23vs1S->getVal()<<" "<<f23vs1S->getError()<<" "<<bkgd1S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd1S_integral->getVal()*nbkgd->getError() <<", signal 1S: "<<sig1S_integral->getVal()*nsig1f->getVal()<<" +/- "<< sig1S_integral->getVal()*nsig1f->getError() << endl; 
+   break;
+ case 3 :
+   outfileFitResults<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<f3Svs2S->getVal()<<" "<<f3Svs2S->getError()<<" "<<alpha->getVal()<<" "<<alpha->getError()<<" "<<sigma1->getVal()<<" "<<sigma1->getError()<<" "<<2*nFitParam+2*baseNll<<" "<<fit_2nd->edm()<<" "<<UnNormChi2<<" "<<UnNormChi2/Dof<<" "<<TMath::Prob(UnNormChi2,Dof)<<" "<<Dof<<" "<<nFitParam<<" "<<baseNll<< endl;
+   
+   outfileFitResults_forNote<<figName_<<" "<<nsig1f->getVal()<<" "<<nsig1f->getError()<<" "<<f2Svs1S->getVal()<<" "<<f2Svs1S->getError()<<" "<<f3Svs1S->getVal()<<" "<<f3Svs1S->getError()<<" "<<f3Svs2S->getVal()<<" "<<f3Svs2S->getError()<<" "<<bkgd1S_integral->getVal()*nbkgd->getVal()<<" +/- "<< bkgd1S_integral->getVal()*nbkgd->getError() <<", signal 1S: "<<sig1S_integral->getVal()*nsig1f->getVal()<<" +/- "<< sig1S_integral->getVal()*nsig1f->getError() << endl; break;																								     default : break;
+   
    
   }
 
@@ -857,6 +883,7 @@ void fitUpsilonYields(int choseSample    = 3, //Input data sample.  1: pp@7TeV d
 
  //  outfileFitResults << "rooFitChSquare= "<< chi2FromRoo*Dof <<endl;
   outfileFitResults.close();
+  outfileFitResults_forNote.close();
   // ConfidencInterval(0.683, f3Svs1S, data, pdf);
   
 }
