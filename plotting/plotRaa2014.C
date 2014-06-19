@@ -20,11 +20,11 @@
 
 using namespace std;
 
-const bool plotCS =false;//fully corrected
+const bool plotCS =true;//fully corrected
 const bool plotUncorrected = true;
 const bool plotFiducial=false;//fiducial plots(not corrected for eff)
-const bool plotEffOrAcc=true;//control plots (ratio of efficiencies etc)
-const bool plotRAA=false;// centrality, transverse momentum, rapidity,
+const bool plotEffOrAcc=false;//control plots (ratio of efficiencies etc)
+const bool plotRAA=true;// centrality, transverse momentum, rapidity,
 float computeRatio(float x, float y) ;
 float computeRatioError(float x, float y, float xerr, float yerr);
 void plot2010();
@@ -377,10 +377,11 @@ cout << "  --- 2S Cross section in pp vs. y short bins---" << endl;
  TF1 *f4Pt = new TF1("f4Pt","0.000000001",0,21);
  f4Pt->SetLineWidth(0);
  f4Pt->GetYaxis()->SetTitleOffset(2);
- f4Pt->GetXaxis()->SetTitle("p_{T}^{#Upsilon_{cand.}} (GeV/c)");		
- f4Pt->GetYaxis()->SetTitle("#frac{1}{L_{pp,PbPb}}#frac{N}{#alpha #varepsilon #Deltap_{T}} (b/(GeV/c))");
+ f4Pt->GetXaxis()->SetTitle("p_{T}^{#varUpsilon} (GeV/c)");		
+ // f4Pt->GetYaxis()->SetTitle("#frac{1}{L_{pp,PbPb}}#frac{N}{#alpha #varepsilon #Deltap_{T}} (b/(GeV/c))");
+ f4Pt->GetYaxis()->SetTitle("#sigma(#varUpsilon #rightarrow #mu^{+}#mu^{-1}) (b)");
  f4Pt->GetYaxis()->SetTitleSize(0.028);
- // f4Pt->GetYaxis()->SetRangeUser(0.01,.09);
+ f4Pt->GetYaxis()->SetRangeUser(0.000000000001,.000000001);
  f4Pt->GetXaxis()->CenterTitle(kTRUE);
  f4Pt->Draw();
  /// one pad to draw PbPb yields,
@@ -394,7 +395,7 @@ cout << "  --- 2S Cross section in pp vs. y short bins---" << endl;
  gpt1circle->SetLineColor(kBlack);
  gpt1->Draw("pe");
  gpt1circle->Draw("p");
- f4Pt->Draw("same");
+ // f4Pt->Draw("same");
  gPad->RedrawAxis();
     
  TGraphErrors *gpt1pp = new TGraphErrors(nPtBins_2013,pt,CS1S_pp_pt,pte,CS1S_pp_pte);
@@ -407,7 +408,7 @@ cout << "  --- 2S Cross section in pp vs. y short bins---" << endl;
  gpt1circlepp->SetLineColor(kBlack);
  gpt1pp->Draw("pe");
  gpt1circlepp->Draw("p");
- f4Pt->Draw("same");
+ //f4Pt->Draw("same");
  gPad->RedrawAxis();
 
 
@@ -431,7 +432,7 @@ cout << "  --- 2S Cross section in pp vs. y short bins---" << endl;
  // gPad->RedrawAxis();
 
 
- TLegend *legend = new TLegend(0.482,0.84,0.88,0.7);
+ TLegend *legend = new TLegend(0.682,0.67,0.85,0.8);
  legend->SetTextSize(0.029);
  legend->SetFillStyle(0);
  legend->SetFillColor(0);
@@ -440,17 +441,18 @@ cout << "  --- 2S Cross section in pp vs. y short bins---" << endl;
  legend->AddEntry(gpt1pp,"#varUpsilon(1S), pp ","lp");
  legend->AddEntry(gpt1,"#varUpsilon(1S), PbPb ","lp");
  legend->Draw();
- TLatex *l1CMSpt = new TLatex(10,0.0000000008, "CMS Internal #sqrt{s_{NN}} = 2.76 TeV");
+ // TLatex *l1CMSpt = new TLatex(10,0.0000000008, "CMS Internal #sqrt{s_{NN}} = 2.76 TeV");
+ TLatex *l1CMSpt = new TLatex(12,0.0000000005, "Work in progress");
  l1CMSpt->SetTextFont(42);
- l1CMSpt->SetTextSize(0.032);
+ l1CMSpt->SetTextSize(0.04);
  l1CMSpt->Draw();
 
  
- TLatex *lyL= new TLatex(2,0.0000000008,"L_{PbPb} = 150 #mub^{-1}; |y| < 2.4");
- 
+ TLatex *lyL= new TLatex(2,0.000000000011,"L_{PbPb} = 150 #mub^{-1}; |y| < 2.4");
+ lyL->SetTextFont(42);
  lyL->SetTextSize(0.029);
- lyL->DrawLatex(2,0.0000000005,"L_{pp} = 5.4 pb^{-1}; |y| < 2.4");
- lyL->DrawLatex(2,0.00000000005,"corrected cross-sections");
+ lyL->DrawLatex(2,0.000000000007,"L_{pp} = 5.4 pb^{-1}; |y| < 2.4");
+ lyL->DrawLatex(2,0.000000000004,"corrected cross-sections");
  lyL->Draw();
 
  
@@ -698,13 +700,13 @@ lyL->DrawLatex(2,0.000000002,"Fiducial");
  ppt2->Draw();
  ppt2->cd();
  //one pad to draw RaaPt!
- TF1 *f4RaaPt = new TF1("f4RaaPt","1",0,21);
+ TF1 *f4RaaPt = new TF1("f4RaaPt","1",0,20.5);
  f4RaaPt->SetLineWidth(0);
- f4RaaPt->GetXaxis()->SetTitle("p_{T}^{#Upsilon_{cand.}} (GeV/c)");
+ f4RaaPt->GetXaxis()->SetTitle("p_{T}^{#varUpsilon} (GeV/c)");
  f4RaaPt->GetYaxis()->SetTitle("R_{AA}");
  f4RaaPt->GetYaxis()->SetTitleOffset(1.8);
  f4RaaPt->GetYaxis()->SetTitleSize(0.028);
- f4RaaPt->GetYaxis()->SetRangeUser(0.,1.8);
+ f4RaaPt->GetYaxis()->SetRangeUser(0.,2);
  f4RaaPt->GetXaxis()->CenterTitle(kTRUE);
  f4RaaPt->Draw();
  TGraphErrors *gRaaPt1 = new TGraphErrors(nPtBins_2013,pt,RAA_1S_pt,pte,RAA_1S_pte);
@@ -718,14 +720,15 @@ lyL->DrawLatex(2,0.000000002,"Fiducial");
  gRaaPt1->Draw("pe");
  gRaaPt1circle->Draw("p");
  f4RaaPt->Draw("same");
- TLatex *l1CMSpt = new TLatex(2,1.6, "CMS Internal #sqrt{s_{NN}} = 2.76 TeV");
+ TLatex *l1CMSpt = new TLatex(12,0.2, "Work in progress");
  l1CMSpt->SetTextFont(42);
- l1CMSpt->SetTextSize(0.037);
+ l1CMSpt->SetTextSize(0.04);
  l1CMSpt->Draw();
- TLatex *lyLPT= new TLatex(2,1.4,"2011 L_{int}^{PbPb} = 152 #mub^{-1}; L_{int}^{pp} = 5.4 pb^{-1};");
- lyLPT->SetTextSize(0.029);
+ TLatex *lyLPT= new TLatex(1,1.8,"2011 L_{int}^{PbPb} = 150 #mub^{-1}; 2013 L_{int}^{pp} = 5.4 pb^{-1};");
+ lyLPT->SetTextFont(42);
+ lyLPT->SetTextSize(0.027);
  lyLPT->Draw();
-lyLPT->DrawLatex(2,1.2,"2010 L_{int}^{PbPb} = 7.28 #mub^{-1}; L_{int}^{pp} = 225 nb^{-1};");
+lyLPT->DrawLatex(1,1.6,"2010 L_{int}^{PbPb} = 7.28 #mub^{-1}; L_{int}^{pp} = 225 nb^{-1};");
  ppt2->Update();
   TGraphErrors *gpt2010 = new TGraphErrors(nPtBins_2010,pt_2010,raaPt2010,pte_2010,raaPt2010e);
  gpt2010->SetMarkerColor(kTeal+3);
@@ -745,17 +748,17 @@ lyLPT->DrawLatex(2,1.2,"2010 L_{int}^{PbPb} = 7.28 #mub^{-1}; L_{int}^{pp} = 225
   gpt2010circle->SetMarkerSize(2);
   gpt2010circle->SetLineColor(kBlack);
   gpt2010circle->Draw("p");
-  f4Pt->Draw("same");
+  f4RaaPt->Draw("same");
   gPad->RedrawAxis();
-TLegend *legend = new TLegend(0.482,0.84,0.88,0.7);
-legend->SetTextSize(0.029);
-legend->SetFillStyle(0);
-legend->SetFillColor(0);
-legend->SetBorderSize(0);
-legend->SetTextFont(42);
-legend->AddEntry(gRaaPt1,"#varUpsilon(1S) R_{AA} now ","lp");
-legend->AddEntry(gpt2010,"#varUpsilon(1S) R_{AA} 2010  ","lp");
- legend->Draw();
+  TLegend *legend = new TLegend(0.2,0.65,0.4,0.75);
+  legend->SetTextSize(0.029);
+  legend->SetFillStyle(0);
+  legend->SetFillColor(0);
+  legend->SetBorderSize(0);
+  legend->SetTextFont(42);
+  legend->AddEntry(gpt2010,"#varUpsilon(1S) JHEP 05 (2012) 063","lp");
+  legend->AddEntry(gRaaPt1,"#varUpsilon(1S) in progress","lp");
+  legend->Draw();
 
 gPad->RedrawAxis();
  }
@@ -894,7 +897,7 @@ TF1 *f4CompRap = new TF1("f4CompRap","1",0,2.45);
  f4CompRap->GetYaxis()->SetTitle("#frac{A_{pp}}{A_{PbPb}}");
  f4CompRap->GetYaxis()->SetTitleOffset(1.8);
  f4CompRap->GetYaxis()->SetTitleSize(0.028);
- f4CompRap->GetYaxis()->SetRangeUser(0.,1.2);
+ f4CompRap->GetYaxis()->SetRangeUser(0.,2);
  f4CompRap->GetXaxis()->CenterTitle(kTRUE);
  f4CompRap->Draw();
  TGraphErrors *gCompRap1 = new TGraphErrors(nRapBins_2014,rap2014,R_A_1S_rap,rap2014e,R_A_1S_rape);
@@ -934,7 +937,7 @@ TF1 *f4CompPt = new TF1("f4CompPt","1",0,20);
  f4CompPt->GetYaxis()->SetTitle("#frac{A_{pp}}{A_{PbPb}}");
  f4CompPt->GetYaxis()->SetTitleOffset(1.8);
  f4CompPt->GetYaxis()->SetTitleSize(0.028);
- f4CompPt->GetYaxis()->SetRangeUser(0.,1.2);
+ f4CompPt->GetYaxis()->SetRangeUser(0.,2.);
  f4CompPt->GetXaxis()->CenterTitle(kTRUE);
  f4CompPt->Draw();
  TGraphErrors *gCompPt1 = new TGraphErrors(nPtBins_2013,pt,R_A_1S_pt,pte,R_A_1S_pte);
@@ -974,7 +977,7 @@ TF1 *f4CompRap = new TF1("f4CompRap","1",0,2.45);
  f4CompRap->GetYaxis()->SetTitle("#frac{#epsilon_{pp}}{#epsilon_{PbPb}}");
  f4CompRap->GetYaxis()->SetTitleOffset(1.8);
  f4CompRap->GetYaxis()->SetTitleSize(0.028);
- f4CompRap->GetYaxis()->SetRangeUser(0.,1.2);
+ f4CompRap->GetYaxis()->SetRangeUser(0.,1.5);
  f4CompRap->GetXaxis()->CenterTitle(kTRUE);
  f4CompRap->Draw();
  TGraphErrors *gCompRap1 = new TGraphErrors(nRapBins_2014,rap2014,R_e_1S_rap,rap2014e,R_e_1S_rape);
@@ -1013,7 +1016,7 @@ TF1 *f4CompPt = new TF1("f4CompPt","1",0,20);
  f4CompPt->GetYaxis()->SetTitle("#frac{#epsilon_{pp}}{#epsilon_{PbPb}}");
  f4CompPt->GetYaxis()->SetTitleOffset(1.8);
  f4CompPt->GetYaxis()->SetTitleSize(0.028);
- f4CompPt->GetYaxis()->SetRangeUser(0.,1.2);
+ f4CompPt->GetYaxis()->SetRangeUser(0.,1.5);
  f4CompPt->GetXaxis()->CenterTitle(kTRUE);
  f4CompPt->Draw();
  TGraphErrors *gCompPt1 = new TGraphErrors(nPtBins_2013,pt,R_e_1S_pt,pte,R_e_1S_pte);
@@ -1079,8 +1082,8 @@ float plot2010()
  for(int centi =0 ; centi<bin1 ; centi++)
    {
      taa[centi]=taa[centi]*1000;
-     CS1S_aa_cent[centi]= computeRatio( N1S_aa_cent3p5[centi] , Ae_1S_pyquen_cent[centi] );
-     CS1S_aa_cente[centi] = computeRatioError( N1S_aa_cent3p5[centi] , Ae_1S_pyquen_cent[centi], N1S_aa_cent3p5e[centi] , Ae_1S_pyquen_cente[centi]);
+     CS1S_aa_cent[centi]= computeRatio( N1S_aa_cent3p5[centi] , Ae_1S_pyquen_cent2014[centi] );
+     CS1S_aa_cente[centi] = computeRatioError( N1S_aa_cent3p5[centi] , Ae_1S_pyquen_cent2014[centi], N1S_aa_cent3p5e[centi] , Ae_1S_pyquen_cent2014e[centi]);
      CS1S_aa_cent[centi]=CS1S_aa_cent[centi]/(mb_percentage[centi]*N_MB_corr * taa[centi]);
      CS1S_aa_cente[centi]=CS1S_aa_cente[centi]/(mb_percentage[centi]*N_MB_corr * taa[centi]);
 
@@ -1756,7 +1759,7 @@ TCanvas *cRaaptu = new TCanvas("cRaaptu","cRaaptu");
  //one pad to draw RaaPt!
  TF1 *f4RaaPt = new TF1("f4RaaPt","1",0,21);
  f4RaaPt->SetLineWidth(0);
- f4RaaPt->GetXaxis()->SetTitle("y^{#Upsilon_{cand.}} ");
+ f4RaaPt->GetXaxis()->SetTitle("p_{T}^{#Upsilon_{cand.}} ");
  f4RaaPt->GetYaxis()->SetTitle("uncorrected R_{AA}");
  f4RaaPt->GetYaxis()->SetTitleOffset(1.8);
  f4RaaPt->GetYaxis()->SetTitleSize(0.028);
@@ -1828,11 +1831,11 @@ TCanvas *cRaaptu = new TCanvas("cRaaptu","cRaaptu");
  f4Rap->Draw("same");
  gPad->RedrawAxis();
     
- TGraphErrors *grap1pp = new TGraphErrors(nRapBins_2013,rap,CS1S_pp_rap2014,rape,CS1S_pp_rap2014e);
+ TGraphErrors *grap1pp = new TGraphErrors(nRapBins_2014,rap,CS1S_pp_rap2014,rape,CS1S_pp_rap2014e);
  grap1pp->SetMarkerColor(kAzure-9);
  grap1pp->SetMarkerStyle(21);
  grap1pp->SetMarkerSize(1.2);
- TGraphErrors *grap1circlepp = new TGraphErrors(nRapBins_2013,rap,CS1S_pp_rap2014,rape,CS1S_pp_rap2014e);
+ TGraphErrors *grap1circlepp = new TGraphErrors(nRapBins_2014,rap,CS1S_pp_rap2014,rape,CS1S_pp_rap2014e);
  grap1circlepp->SetMarkerStyle(25);
  grap1circlepp->SetMarkerSize(1.22);
  grap1circlepp->SetLineColor(kBlack);
@@ -1889,11 +1892,11 @@ TCanvas *cRaarapu = new TCanvas("cRaarapu","cRaarapu");
  f4RaaRap->GetYaxis()->SetRangeUser(0.,1.3);
  f4RaaRap->GetXaxis()->CenterTitle(kTRUE);
  f4RaaRap->Draw();
- TGraphErrors *gRaaRap1 = new TGraphErrors(nRapBins_2013,rap,uncorrRAA_1S_rap2014,rape,uncorrRAA_1S_rap2014e);
+ TGraphErrors *gRaaRap1 = new TGraphErrors(nRapBins_2014,rap2014,uncorrRAA_1S_rap2014,rap2014e,uncorrRAA_1S_rap2014e);
  gRaaRap1->SetMarkerColor(8);
  gRaaRap1->SetMarkerStyle(33);
  gRaaRap1->SetMarkerSize(2);
- TGraphErrors *gRaaRap1circle = new TGraphErrors(nRapBins_2013,rap,uncorrRAA_1S_rap2014,rape,uncorrRAA_1S_rap2014e);
+ TGraphErrors *gRaaRap1circle = new TGraphErrors(nRapBins_2014,rap2014,uncorrRAA_1S_rap2014,rap2014e,uncorrRAA_1S_rap2014e);
  gRaaRap1circle->SetMarkerStyle(27);
  gRaaRap1circle->SetMarkerSize(2);
  gRaaRap1circle->SetLineColor(kBlack);
