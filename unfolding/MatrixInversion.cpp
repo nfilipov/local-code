@@ -17,7 +17,7 @@
 #include "TLorentzVector.h"
 #include <TMath.h>
 #include "TMatrixT.h"
-#include "TRandom.h"
+#include "TRandom3.h"
 #include <TStyle.h>
 #include <TSystem.h>
 #include "TTree.h"
@@ -105,12 +105,12 @@ void MatrixInversion(const char* inputOniaTree = "../../upsiMiniTree_Pyquen1S_QQ
   double binsx[nBx]={0,2.5,5,8,12,20,50};
   double binsy[nBy]={0,2.5,5,8,12,20,50};
 
-
+  //useless loop stuff!
   double jj;
   double ii;
   double IJ;
  
-
+  // in case you bin wider. pretty useless.
   const int nBX =15;
   const double wideX = 50;
   const int nBY = 200;
@@ -124,7 +124,7 @@ void MatrixInversion(const char* inputOniaTree = "../../upsiMiniTree_Pyquen1S_QQ
       binsY[i]=-wideY/2 + i*wideY/nBY;
     }
  
-
+  // not used for the moment
   double distribSigma[nBx-1];
   double distribSigmaError[nBx-1];
   double distribMean[nBx-1];
@@ -139,6 +139,7 @@ void MatrixInversion(const char* inputOniaTree = "../../upsiMiniTree_Pyquen1S_QQ
   double distribRMS[nBx-1];
   double SumWeightsHisto1DY[nBx-1]={};
  
+  // hardcoded Nb of events observed in real data. in bins of pt!
   TMatrixT<double> N1S_obs_PbPb(1,nBy-1,1,1);
   N1S_obs_PbPb(1,1)=863;
   N1S_obs_PbPb(2,1)=929;
@@ -153,8 +154,8 @@ void MatrixInversion(const char* inputOniaTree = "../../upsiMiniTree_Pyquen1S_QQ
   N1S_obs_PbPb_e(4,1)=32;
   N1S_obs_PbPb_e(5,1)=21;
   N1S_obs_PbPb_e(6,1)=8.9;
-  TMatrixT<double> N1S_unfolded(1,nBy-1,1,1);
-  TMatrixT<double> N1S_unfolded_e(1,nBy-1,1,1);
+  TMatrixT<double> N1S_unfolded(1,nBy-1,1,1); // will store the unfolded result
+  TMatrixT<double> N1S_unfolded_e(1,nBy-1,1,1); // will store the stat err.
   TMatrixT<double> N1S_obs_pp(1,nBy-1,1,1);
   N1S_obs_pp(1,1)=1717;
   N1S_obs_pp(2,1)=1550;
@@ -178,6 +179,7 @@ void MatrixInversion(const char* inputOniaTree = "../../upsiMiniTree_Pyquen1S_QQ
   TMatrixT<double> Id(1,nBx-1,1,nBx-1);
   TH2D *Unfolding = new TH2D("Unfolding Matrix",";p_{T}^{RECO} (GeV) ;p_{T}^{GEN} (GeV) ;fraction of p_{T}^{RECO}  ",nBx-1,binsx,nBy-1,binsy); //nBX,0,wideX,nBY,-wideY/2,wideY/2 //nBx-1,binsx,nBy-1,binsy
 
+  // for a further check of the method - smear the reco distribution and compare unfoldings.
   TRandom3 r(0);
   double smear[404670];
    for(int i=0; i<nentries; i++)
