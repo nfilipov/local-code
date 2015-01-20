@@ -11,6 +11,7 @@
 #define nRapBins_2010 2
 #define nRapBins_2014 6
 #define nCentBins_2014 8
+#define nCentBins_2010 2
 #define nRapBins_pPb 9
 #define bin1  7
 #define bin 8
@@ -21,30 +22,38 @@
 #define N_MB_uncorr 1.126653312	
 #define N_MB_corr   1.138033648
 #define T_AA_b 5662
-#define T_AA_mb 5.66     
-
-  float cent[bin1]  ={22.05, 86.3, 130.0, 187.1, 261.4, 330.4, 381.3}; // with 40-50 and 50-100 //and the 5-10 bin was 329.5, which is inconsistent with a few lines below.
-float nPart2014[nCentBins_2014]  ={8.75, 42.02, 86.3, 130.0, 187.2, 261.4, 330.4, 381.3}; // with 40-50 and 50-100 //and the 5-10 bin was 329.5, which is inconsistent with a few lines below.
+#define T_AA_mb 5.662     
+#define RapBinWidth 4.8
+#define L_pp_e 0.027
+#define N_MB_e 0.034
+float cent[bin1]  ={22.05, 86.3, 130.0, 187.1, 261.4, 330.4, 381.3}; // with 40-50 and 50-100 //and the 5-10 bin was 329.5, which is inconsistent with a few lines below.
+float nPart2014[nCentBins_2014]  ={8.75, 42.02, 86.23, 130.06, 187.35, 261.49, 329.48, 381.41}; //from 2012_246_v5
+float nPart2014e[nCentBins_2014] ={1.13,3.48,4.35,4.60,4.44,3.96,3.53,2.21}; //from 2012_246_v5
 float taa[bin1] = {0.486,2.748,5.089,8.782,14.477,20.47,25.901}; // taa of 40-50, 50-100
-float taa2014[nCentBins_2014] = {0.125,0.982,2.748,5.089,8.782,14.477,20.47,25.901}; //taa of 40-50, 50-100
+float taae[bin1]={0.073,0.30,0.43,0.58,0.76,0.94,1.06};
+float taaDD[nCentBins_2010]={2.37,18.83171875};
+float taa2014[nCentBins_2014] = {0.13,0.985,2.75,5.089,8.80,14.48,20.48,25.91}; //taa of 50-70, 70-100
+float taa2014e[nCentBins_2014] = {0.02,0.145,0.30,0.43,0.58,0.76,0.94,1.06};
 float mb_percentage2014[nCentBins_2014] = {0.3,0.2,0.1,0.1,0.1,0.1,0.05,0.05};
 float mb_percentage[bin1] = {0.5,0.1,0.1,0.1,0.1,0.05,0.05};
-  int binPt = 5;
-   int binPt2010 = 3;
-   int binRap = 5;
-   int binRap2010 = 2;
-   int bin2010 = 4;
-  
+float mb_percentageDD[nCentBins_2010]={0.8,0.2};
+
+int binPt = 5;
+int binPt2010 = 3;
+int binRap = 5;
+int binRap2010 = 2;
+int bin2010 = 4;
+
    // float cent1[8] ={14.2, 69.9, 130.0, 187.1, 261.4, 329.4, 381.3}; // with 40-60 and 60-100
    float nPart1[9] ={8.75,42.02, 86.3, 130.1, 187.3, 261.4, 330.3, 381.2}; // with 70-100, 50-70, 40-50, 30-40, 20-30, 10-20, 5-10, 0-5
    float nPart2[7] ={17.8, 69.9, 130.0, 187.1, 261.4, 355.4};//?? 
 
-   float cent2010[5]={308.6,64.24,261.3,355.7};//0-20,20-100,10-20,0-10
-
+float cent2010[5]={308.6,64.24,261.3,355.7};//0-20,20-100,10-20,0-10
+float nPartDD[nCentBins_2010]={64.24,308.6};
    float pt [5] = {1.25, 3.75, 6.5, 10., 16.};
    float pte[5] = {1.25, 1.25, 1.5, 2., 4.};
-   float pt2010 [3] = {3.25,8.25,15.};
-   float pt2010e[3] = {3.25,1.75,5};
+   float pt2010 [3] = {2.5,8.5,16.};
+   float pt2010e[3] = {2.5,3.5,4};
 
    float rap2010[2]={0.6,1.8};
    float rap2010e[2]={0.6,0.6};
@@ -54,6 +63,7 @@ float mb_percentage[bin1] = {0.5,0.1,0.1,0.1,0.1,0.05,0.05};
    float rap[5] = {0.2 , 0.55, 0.85, 1.25, 1.95};
    float rape[5]= {0.2, 0.15, 0.15, 0.25, 0.45};
 float rap2014[6] = {0.2 , 0.6, 1.0, 1.4, 1.8,2.2}; // for the moment with bins of ∆y =0.8 except the last one which is 1.6-2.4
+float rap2014Shift[6] = {0.3 , 0.7, 1.1, 1.5, 1.9,2.3}; // for the moment with bins of ∆y =0.8 except the last one which is 1.6-2.4
 float rap2014e[6] = {0.2,0.2,0.2,0.2,0.2,0.2}; // for the moment with bins of ∆y =0.8 except the last one which is 1.6-2.4
 
 float centErr[bin1]={6,6,6,6,6,6,6};
@@ -79,6 +89,26 @@ float centnoErr[bin1]={0,0,0,0,0,0,0};
    float massRes_pp[1]={91.6};
    float massRes_ppe[1]={2.1};
  
+string binsPt[nPtBins_2013]={"\pt [{\\rm GeV}/c] $<$ 2.5",
+			     "2.5 $<$ \pt [{\\rm GeV}/c] $<$ 5",
+			     "5 $<$ \pt [{\\rm GeV}/c] $<$ 8",
+			     "8 $<$ \pt [{\\rm GeV}/c] $<$ 12",
+			     "12 $<$ \pt [{\\rm GeV}/c] $<$ 20"};
+string binsPt2010[nPtBins_2010]={"\pt [{\\rm GeV}/c] $<$ 5",
+				 "5 $<$ \pt [{\\rm GeV}/c] $<$ 12",
+				 "12 $<$ \pt [{\\rm GeV}/c] $<$ 20"};
+   
+string binsRap[nRapBins_2014]={"$|y| <$ 0.4",
+			       "0.4 $< |y| <$ 0.8  ",
+			       "0.8 $< |y| <$ 1.2 ",
+			       "1.2 $< |y| <$ 1.6 ",
+			       "1.6 $< |y| <$ 2   ",
+			       "2 $< |y| <$ 2.4   "};
+string binsRap2010[nRapBins_2010]={"$|y| <$ 1.2 ",
+				   "1.2 $< |y| <$ 2.4   "};
+string binsCent[nCentBins_2014]={"70-100","50-70","40-50","30-40","20-30","10-20","5-10","0-5"};
+string binsCent4[bin1]={"50-100","40-50","30-40","20-30","10-20","5-10","0-5"};
+
    //alice shit pT>0 GeV/c 
    #define binA 2
 
@@ -388,22 +418,6 @@ float Ae_1S_pyquen_cent2014[nCentBins_2014]={0.222,0.221,0.218,0.217,0.216,0.212
 //float Ae_1S_pyquen_cent2014e[nCentBins_2014]={0.0018,0.0020,0.0026,0.0025,0.0026,0.0025,0.0035,0.0030};
 float Ae_1S_pyquen_cent2014e[nCentBins_2014]={0.0015,0.0016,0.0021,0.0021,0.0021,0.020,0.0029,0.0024};
 
-//I assume these are with 3p5 ? //table 15
-float Ae_1S_pyquen_DD020[nRapBins_2010]={0.266,0.305};
-float Ae_1S_pyquen_DD20100[nRapBins_2010]={0.278,0.328};
-float Ae_1S_pyquen_DD020e[nRapBins_2010]={0.002,0.0032};
-float Ae_1S_pyquen_DD20100e[nRapBins_2010]={0.0017,0.0027};
-
-float Aet_1S_pyquen_DDR020[nRapBins_2010]={0.249,0.196};
-float Aet_1S_pyquen_DDR020e[nRapBins_2010]={0.003,0.003};
-float Aet_1S_pyquen_DDR20100[nRapBins_2010]={0.259,0.211};
-float Aet_1S_pyquen_DDR20100e[nRapBins_2010]={0.003,0.003};
-
-float Aet_1S_pyquen_DDP020[nPtBins_2010]={0.215,0.218,0.341};
-float Aet_1S_pyquen_DDP020e[nPtBins_2010]={0.003,0.004,0.005};
-float Aet_1S_pyquen_DDP20100[nPtBins_2010]={0.227,0.228,0.356};
-float Aet_1S_pyquen_DDP20100e[nPtBins_2010]={0.002,0.004,0.004};
-
 
 //D. Pyquen sample 2S. with binning of 2S. // with 
 // total 2S acc*eff = 0.254 +/- 0.0022
@@ -422,24 +436,38 @@ float Ae_2S_pyquen_rap2014e[nRapBins_2014]={0.003,0.003,0.003,0.003,0.003,0.002}
 
 float Ae_1S_pythia_tot= 0.2310;
 float Ae_1S_pythia_tote=0.0006;
-float Aet_1S_pythia_tot=0.251;
+float Aet_1S_pythia_tot=0.252;
 float Aet_1S_pythia_tote = 0.001;
+float Aet_1S_pythia_tot4=0.168;
+float Aet_1S_pythia_tot4e = 0.001;
+float t_1S_pythia_tot3p5 = 1.089;
+float t_1S_pythia_tot4 = 1.072;
 
 float Ae_2S_pythia_tot= 0.201;
 float Ae_2S_pythia_tote=0.0006;
+float Aet_2S_pythia_tot= 0.215;
+float Aet_2S_pythia_tote= 0.001;
+float t_2S_pythia_tot= 1.068;
 
-float Ae_3S_pythia_tot= 0.210;
-float Ae_3S_pythia_tote=0.0007;
+float Aet_3S_pythia_tot= 0.222;
+float Aet_3S_pythia_tote=0.001;
+float t_3S_pythia_tot = 1.056;
 
 float Ae_1S_pyquen_tot=0.210;
 float Ae_1S_pyquen_tote=0.0009;
+float Aet_1S_pyquen_tot=0.229;
+float Aet_1S_pyquen_tote=0.002;
+float t_1S_pyquen_tot3p5=1.087;
+float t_1S_pyquen_tot4=1.070;
 
 float Ae_2S_pyquen_tot=0.1918;
 float Ae_2S_pyquen_tote=0.0010;
-
+float Aet_2S_pyquen_tot=0.205;
+float Aet_2S_pyquen_tote=0.002;
+float t_2S_pyquen_tot=1.067;
 ///for FUN
-float Ae_3S_pyquen_tot=0.2003;
-float Ae_3S_pyquen_tote=0.02;
+float Aet_3S_pyquen_tot=0.2003;
+float Aet_3S_pyquen_tote=0.02;
 
 /*
 
@@ -457,7 +485,7 @@ max. 10%uncertainty on this from varying ratio eff vs pt or rapidity
 //rap in bins called 2014, pt in bins called 2013
 //eff tot 1S = 0.656 +/- 0.0011
 // acc tot 1S =0.3520 +/- 0.0007
-// tnp tot 1S = 1.085 +/- 0.002
+// tnp tot 1S = 1.089 +/- 0.002(?)
 
 float A_1S_pythia_pt3p5[nPtBins_2013]={0.46,0.30,0.28,0.37,0.51};
 float A_1S_pythia_pt3p5e[nPtBins_2013]={0.0001,0.0001,0.0001,0.001,0.002};
@@ -471,6 +499,10 @@ float t_1S_pythia_pt3p5[nPtBins_2013]={1.108,1.1,1.077,1.057,1.037};
 float t_1S_pythia_pt3p5e[nPtBins_2013]={0.004,0.004,0.005,0.006,0.008};
 float t_1S_pythia_rap3p5[nRapBins_2014]={1.069,1.069,1.076,1.099,1.138,1.160};
 float t_1S_pythia_rap3p5e[nRapBins_2014]={0.004,0.004,0.004,0.005,0.006,0.011};
+float t_1S_pythia_pt4[nPtBins_2013]={1.095,1.081,1.062,1.046,1.031};
+float t_1S_pythia_pt4e[nPtBins_2013]={0.004,0.004,0.005,0.006,0.008};
+float t_1S_pythia_rap4[nRapBins_2014]={1.052,1.052,1.057,1.081,1.125,1.151};
+float t_1S_pythia_rap4e[nRapBins_2014]={0.004,0.004,0.004,0.005,0.007,0.013};
 //eff tot 2S = 0.718 +/- 0.0013
 //acc tot 2S =  0.28 +/- 0.000X
 //tnp tot 2S = 1.067 +/- 0.002
@@ -533,26 +565,18 @@ float t_1S_pyquen_pt3p5[nPtBins_2013]={1.106,1.098,1.077,1.056,1.038};
 float t_1S_pyquen_pt3p5e[nPtBins_2013]={0.012,0.013,0.014,0.010,0.008};
 float t_1S_pyquen_rap3p5[nRapBins_2014]={1.064,1.064,1.072,1.097,1.143,1.168};
 float t_1S_pyquen_rap3p5e[nRapBins_2014]={0.013,0.013,0.013,0.014,0.018,0.033};
+float t_1S_pyquen_pt4[nPtBins_2013]={1.093,1.079,1.061,1.045,1.032};
+float t_1S_pyquen_pt4e[nPtBins_2013]={0.012,0.013,0.014,0.010,0.008};
+float t_1S_pyquen_rap4[nRapBins_2014]={1.048,1.048,1.053,1.079,1.130,1.157};
+float t_1S_pyquen_rap4e[nRapBins_2014]={0.013,0.013,0.013,0.014,0.018,0.033};
 float t_1S_pyquen_cent2014[nCentBins_2014]={1.090,1.088,1.087,1.087,1.087,1.087,1.087,1.087};
 float t_1S_pyquen_cent2014e[nCentBins_2014]={0.008,0.009,0.012,0.012,0.012,0.012,0.017,0.015};
+float t_1S_pyquen_cent42014[nCentBins_2014]={1.073,1.071,1.070,1.070,1.070,1.070,1.070,1.069};
+float t_1S_pyquen_cent42014e[nCentBins_2014]={0.010,0.010,0.013,0.013,0.014,0.013,0.019,0.017};
 /* float e_1S_pyquen_rap[nRapBins_2010]={}; */
 /* float e_1S_pyquen_rape[nRapBins_2010]={}; */
 /* float A_1S_pyquen_rap[nRapBins_2010]={}; */
 /* float A_1S_pyquen_rape[nRapBins_2010]={}; */
-
-
-float e_1S_pyquen_DD020[nRapBins_2010]={0.596,0.577};
-float e_1S_pyquen_DD20100[nRapBins_2010]={0.621,0.622};
-float e_1S_pyquen_DD020e[nRapBins_2010]={0.0051,0.0066};
-float e_1S_pyquen_DD20100e[nRapBins_2010]={0.0043,0.0057};
-float A_1S_pyquen_DD020[nRapBins_2010]={0.447,0.530};
-float A_1S_pyquen_DD20100[nRapBins_2010]={0.449,0.528};
-float A_1S_pyquen_DD020e[nRapBins_2010]={0.0024,0.0039};
-float A_1S_pyquen_DD20100e[nRapBins_2010]={0.0020,0.0032};
-float t_1S_pyquen_DDR020[nRapBins_2010]= {1.067,1.122};
-float t_1S_pyquen_DDR20100[nRapBins_2010]= {1.067,1.122};
-float t_1S_pyquen_DDP020[nPtBins_2010]=   {1.099,1.066,1.043};
-float t_1S_pyquen_DDP20100[nPtBins_2010]=   {1.1,1.066,1.043};
 
 float t_2S_pyquen_pt[nPtBins_2013]={1.078,1.071,1.057,1.045,1.032};
 float t_2S_pyquen_pte[nPtBins_2013]={0.012,0.014,0.015,0.011,0.007};
@@ -621,9 +645,9 @@ float Aet_2S_pythia_pt2013Largee[nPtBins_2010]={0.001,0.002,0.005};
 float Aet_2S_pythia_rap2014Large[nRapBins_2010]={0.249,0.175};
 float Aet_2S_pythia_rap2014Largee[nRapBins_2010]={0.001,0.001};
 
-float Aet_2S_pyquen_pt2013Large[nPtBins_2010]={0.200,0.191,0.316};
-float Aet_2S_pyquen_pt2013Largee[nPtBins_2010]={0.002,0.003,0.005};
-float Aet_2S_pyquen_rap2014Large[nRapBins_2010]={0.230,0.177};
+float Aet_2S_pyquen_pt2013Large[nPtBins_2010]={0.208,0.181,0.361};
+float Aet_2S_pyquen_pt2013Largee[nPtBins_2010]={0.002,0.003,0.006};
+float Aet_2S_pyquen_rap2014Large[nRapBins_2010]={0.229,0.175};
 float Aet_2S_pyquen_rap2014Largee[nRapBins_2010]={0.003,0.003};
 
 float Aet_2S_pyquen_pt2013[nPtBins_2013]={0.275,0.160,0.161,0.232,0.361};
@@ -631,60 +655,80 @@ float Aet_2S_pyquen_pt2013e[nPtBins_2013]={0.004,0.003,0.003,0.004,0.006};
 float Aet_2S_pyquen_rap2014[nRapBins_2014]={0.220,0.230,0.236,0.233,0.199,0.071};
 float Aet_2S_pyquen_rap20104e[nRapBins_2014]={0.004,0.004,0.005,0.005,0.005,0.003};
 float Aet_2S_pyquen_cent2014[nCentBins_2014]={0.214,0.213,0.211,0.209,0.206,0.205,0.200,0.198};
-float Aet_2S_pyquen_cent2014[nCentBins_2014]={0.003,0.004,0.004,0.004,0.003,0.005,0.004,0.004};
+float Aet_2S_pyquen_cent2014e[nCentBins_2014]={0.003,0.004,0.004,0.004,0.003,0.005,0.004,0.004};
 
 
+///PT 4 stuff
+float Aet_1S_pythia_pt4[nPtBins_2013]={0.206,0.120,0.142,0.224,0.355};
+float Aet_1S_pythia_pt4e[nPtBins_2013]={0.001,0.001,0.001,0.002,0.005};
+float Aet_1S_pythia_rap42014[nRapBins_2014]={0.192,0.195,0.193,0.180,0.154,0.058};
+float Aet_1S_pythia_rap42014e[nRapBins_2014]={0.002,0.002,0.002,0.002,0.002,0.001};
+float Aet_1S_pyquen_pt4[nPtBins_2013]={0.189,0.111,0.136,0.223,0.354};
+float Aet_1S_pyquen_pt4e[nPtBins_2013]={0.004,0.002,0.003,0.004,0.005};
+float Aet_1S_pyquen_rap42014[nRapBins_2014]={0.168,0.178,0.183,0.178,0.151,0.059};
+float Aet_1S_pyquen_rap42014e[nRapBins_2014]={0.003,0.004,0.004,0.004,0.004,0.003};
+float Aet_1S_pyquen_cent42014[nCentBins_2014]={0.166,0.166,0.164,0.164,0.163,0.160,0.157,0.152};
+float Aet_1S_pyquen_cent42014e[nCentBins_2014]={0.003,0.004,0.003,0.003,0.003,0.003,0.002,0.002};
 
-
-
-
-
-
+//// Double differential // Large Bins
+float Aet_1S_pythia_ptLarge[nPtBins_2010]={0.257,0.222,0.390};
+float Aet_1S_pythia_ptLargee[nPtBins_2010]={0.001,0.01,0.005};
+float Aet_1S_pythia_rapLarge[nRapBins_2010]={0.289,0.207};
+float Aet_1S_pythia_rapLargee[nRapBins_2010]={0.001,0.001};
+float Aet_1S_pyquen_ptLarge[nPtBins_2010]={0.228,0.210,384};   //pyquen, cent. integrated
+float Aet_1S_pyquen_ptLargee[nPtBins_2010]={0.002,0.003,0.005};
+float Aet_1S_pyquen_rapLarge[nRapBins_2010]={0.252,0.201};
+float Aet_1S_pyquen_rapLargee[nRapBins_2010]={0.002,0.003};
+//////////////////////////////////////YIELDS//////////////////////////////////////
 ////yields in the note
-/* float N1S_aa_pt3p5[nPtBins_2013] = {863,929,572,346,184}; // ,53 *///prior to Oct 20!
-/* float N1S_aa_pt3p5e[nPtBins_2013] = {92,75,66,32,21}; //,8.9 */
-/* float N1S_aa_pt3p5[nPtBins_2013] = {691,686,507,343,175}; // ,53 */
-/* float N1S_aa_pt3p5e[nPtBins_2013] = {42,41,66,32,21}; //,8.9 */
-float N1S_aa_pt3p5[nPtBins_2013]={725.578,700.694,515.951,349.402,182.037};
-float N1S_aa_pt3p5e[nPtBins_2013]={43.222,41.8636,36.5595,40.0363,16.6537};
+/* /\* float N1S_aa_pt3p5[nPtBins_2013] = {863,929,572,346,184}; // ,53 *\///prior to Oct 20! */
+/* /\* float N1S_aa_pt3p5e[nPtBins_2013] = {92,75,66,32,21}; //,8.9 *\/ */
+/* /\* float N1S_aa_pt3p5[nPtBins_2013] = {691,686,507,343,175}; // ,53 *\/ */
+/* /\* float N1S_aa_pt3p5e[nPtBins_2013] = {42,41,66,32,21}; //,8.9 *\/ */
+/* float N1S_aa_pt3p5[nPtBins_2013]={725.578,700.694,515.951,349.402,182.037}; */
+/* float N1S_aa_pt3p5e[nPtBins_2013]={43.222,41.8636,36.5595,40.0363,16.6537}; */
 float N1S_aa_pt3p5Large[nPtBins_2010] = {1842,466,311}; // ,53
 float N1S_aa_pt3p5eLarge[nPtBins_2010] = {110,67,24}; //,8.9   // wowowowow 2nd bin was 107, tricked it :) for unimportant reasons.
+/* float N1S_aa_pt4[nPtBins_2013] = {440.993,398.654,349.214,290.442,162.54}; */
+/* float N1S_aa_pt4e[nPtBins_2013] = {33.4403,29.9976,27.5772,24.5429,15.4982}; */
 
-float N1S_aa_rap3p5[nRapBins_2013] = {492,388,403,694,677};
-float N1S_aa_rap3p5e[nRapBins_2013] = {57,43,48,57,79};
-//float N1S_aa_cent3p5[bin1] = {269,241,375,520,620,452,477};
-// new values from july 2014, with 70-100 bin included!
-/* float N1S_aa_cent3p5[nCentBins_2014] = {57,176,228,330,439,636,441,499}; // 70-100 bin, with pol2 */
-/* float N1S_aa_cent3p5e[nCentBins_2014] ={10, 20, 31, 41, 45, 60, 53, 74}; */
-float N1S_aa_cent3p5[nCentBins_2014] = {48.2829,173.952,172.083,288.917,438.602,646.191,411.335,412.229};
-float N1S_aa_cent3p5e[nCentBins_2014] = {9.00598,17.2041,18.5096,24.7382,31.9025,40.348,33.3496,36.3436};
+/* float N1S_aa_rap3p5[nRapBins_2013] = {492,388,403,694,677}; */
+/* float N1S_aa_rap3p5e[nRapBins_2013] = {57,43,48,57,79}; */
+/* //float N1S_aa_cent3p5[bin1] = {269,241,375,520,620,452,477}; */
+/* // new values from july 2014, with 70-100 bin included! */
+/* /\* float N1S_aa_cent3p5[nCentBins_2014] = {57,176,228,330,439,636,441,499}; // 70-100 bin, with pol2 *\/ */
+/* /\* float N1S_aa_cent3p5e[nCentBins_2014] ={10, 20, 31, 41, 45, 60, 53, 74}; *\/ */
+/* float N1S_aa_cent3p5[nCentBins_2014] = {48.2829,173.952,172.083,288.917,438.602,646.191,411.335,412.229}; */
+/* float N1S_aa_cent3p5e[nCentBins_2014] = {9.00598,17.2041,18.5096,24.7382,31.9025,40.348,33.3496,36.3436}; */
 float N1S_aa_pt3p5U[nPtBins_2013] = {862,945,574,329,180};//,54};
 float N1S_aa_pt3p5eU[nPtBins_2013] = {94.4,78.9,69.8,33.6,21.9}; //,8.9 9.3
 
-float N2S_aa_pt3p5[bin1] = {65,53,9}; //2010 binning
-float N2S_aa_pt3p5e[bin1] = {59,24,13}; //and their errors.
-float N2S_aa_rap3p5[bin1] = {112,61}; //2010 binning
-float N2S_aa_rap3p5e[bin1]= {46,38}; //and their errors.
-//float N2S_aa_cent3p5[bin1] = {38,40,55,16,28,28,76}; //2011 binning
-//float N2S_aa_cent3p5e[bin1]= {15,17,21,23,30,29,34}; //and their errors.
-/* float N2S_aa_cent3p5[bin1] = {10.8,16,34,37,1.,22,12,74}; //2014 binning ! */
-/* float N2S_aa_cent3p5e[bin1]= {6.9,11,16,20,22,30,26,36}; //and their errors. */
-/* float N2S_aa_cent4[bin1] = {26,30,48,39,43,0.9,47}; //2011 binning ! */
-/* float N2S_aa_cent4e[bin1]= {9,13,15,19,28,23,27}; //and their errors. */
-float N2S_aa_cent4[bin1] = {26,21.7397,36.0665,30.8685,24.8739,2.59681,29.2158}; //
-float N2S_aa_cent4e[bin1] = {9,9.76781,13.8025,15.7822,20.1582,15.5757,19.4574};// careful first bin crazy
+/* float N2S_aa_pt3p5[nPtBins_2010] = {65,53,9}; //2010 binning */
+/* float N2S_aa_pt3p5e[nPtBins_2010] = {59,24,13}; //and their errors. */
+/* float N2S_aa_rap3p5[nPtBins_2010] = {112,61}; //2010 binning */
+/* float N2S_aa_rap3p5e[nPtBins_2010]= {46,38}; //and their errors. */
+/* //float N2S_aa_cent3p5[bin1] = {38,40,55,16,28,28,76}; //2011 binning */
+/* //float N2S_aa_cent3p5e[bin1]= {15,17,21,23,30,29,34}; //and their errors. */
+/* /\* float N2S_aa_cent3p5[bin1] = {10.8,16,34,37,1.,22,12,74}; //2014 binning ! *\/ */
+/* /\* float N2S_aa_cent3p5e[bin1]= {6.9,11,16,20,22,30,26,36}; //and their errors. *\/ */
+/* /\* float N2S_aa_cent4[bin1] = {26,30,48,39,43,0.9,47}; //2011 binning ! *\/ */
+/* /\* float N2S_aa_cent4e[bin1]= {9,13,15,19,28,23,27}; //and their errors. *\/ */
+/* float N2S_aa_cent4[bin1] = {26,21.7397,36.0665,30.8685,24.8739,2.59681,29.2158}; // */
+/* float N2S_aa_cent4e[bin1] = {9,9.76781,13.8025,15.7822,20.1582,15.5757,19.4574};// careful first bin crazy */
 
 
-float N1S_aa_tot4=1857;
-float N1S_aa_tot4e=102;
-float N1S_aa_tot3p5=2759;
-float N1S_aa_tot3p5e=135;
-float N2S_aa_tot4=171;
-float N2S_aa_tot4e=43;
+float N1S_aa_tot4=1784;
+float N1S_aa_tot4e=62;
+float N1S_aa_tot3p5=2588;
+//float N1S_aa_tot3p5=2759;
+//float N1S_aa_tot3p5e=135;
+float N1S_aa_tot3p5e=82;
+float N2S_aa_tot4=142;
+float N2S_aa_tot4e=42;
 float N2S_aa_tot3p5=227;
 float N2S_aa_tot3p5e=66;
-float N3S_aa_tot4=23;
-float N3S_aa_tot4e=43;
+float N3S_aa_tot4=0;
+float N3S_aa_tot4e=39;
 float N3S_aa_tot3p5=37;
 float N3S_aa_tot3p5e=59;
 
@@ -706,128 +750,255 @@ float N3S_aa_UL4=97.8;
 /* float N3S_aa_tot3p5e=63; */
 
 //LEAD LEAD
-// yields from francois May 5th
-/* float N1S_aa_rap3p5_2014[nRapBins_2014] = {486,520,623,532,464,113};// large bin=540} */
-/* float N1S_aa_rap3p5_2014e[nRapBins_2014]= {40.6,51.7,69.3,44.3,76.2,30.3}; //largebin=78.6 */
-float N1S_aa_rap3p5_2014[nRapBins_2014]={490.817,506.78,570.804,512.765,375.383,118.497};
-float N1S_aa_rap3p5_2014e[nRapBins_2014]={31.3657,35.0903,38.568,37.6318,31.452,18.1268};
+/* // yields from francois May 5th */
+/* /\* float N1S_aa_rap3p5_2014[nRapBins_2014] = {486,520,623,532,464,113};// large bin=540} *\/ */
+/* /\* float N1S_aa_rap3p5_2014e[nRapBins_2014]= {40.6,51.7,69.3,44.3,76.2,30.3}; //largebin=78.6 *\/ */
+
 float N1S_aa_rap3p5_2014Large[nRapBins_2010] = {1610,970};
 float N1S_aa_rap3p5_2014Largee[nRapBins_2010]= {91.3,64.7};
 
-float N1S_aa_rap4_2014[nRapBins_2013]={312,320,397,388,426};//,334,59.6};
-float N1S_aa_rap4_2014e[nRapBins_2013]={26.9,26.9,30.9,33.6,55.3};//,53.7,16.3};
-float N1S_aa_rap4_2014Large[nRapBins_2010]={1080,665};
-float N1S_aa_rap4_2014Largee[nRapBins_2010]={69.7,47.2};
+float N1S_aa_rap4_2014[nRapBins_2014]={312,320,397,388,334,59.6};
+float N1S_aa_rap4_2014e[nRapBins_2014]={26.9,26.9,30.9,33.6,53.7,16.3};
+/* float N1S_aa_rap4_2014Large[nRapBins_2010]={1080,665}; */
+/* float N1S_aa_rap4_2014Largee[nRapBins_2010]={69.7,47.2}; */
 
-float N2S_aa_rap3p5_2014Large[nRapBins_2010]={111,61.7};
-float N2S_aa_rap3p5_2014Largee[nRapBins_2010]={45.4,38.2};
-/* float N2S_aa_rap4_2014Large[nRapBins_2010]={84.3,58.8}; */
-/* float N2S_aa_rap4_2014Largee[nRapBins_2010]={32.6,28.2}; */
-float N2S_aa_rap4_2014Large[nRapBins_2010]={83.0694,52.3694};
-float N2S_aa_rap4_2014Largee[nRapBins_2010]={29.9647,27.1147};
+/* float N2S_aa_rap3p5_2014Large[nRapBins_2010]={111,61.7}; */
+/* float N2S_aa_rap3p5_2014Largee[nRapBins_2010]={45.4,38.2}; */
+/* /\* float N2S_aa_rap4_2014Large[nRapBins_2010]={84.3,58.8}; *\/ */
+/* /\* float N2S_aa_rap4_2014Largee[nRapBins_2010]={32.6,28.2}; *\/ */
+/* float N2S_aa_rap4_2014Large[nRapBins_2010]={83.0694,52.3694}; */
+/* float N2S_aa_rap4_2014Largee[nRapBins_2010]={29.9647,27.1147}; */
 //from me
-
 float N2S_aa_pt4_2013Large[nPtBins_2010]={71.,43.,20};
 float N2S_aa_pt4_2013Largee[nPtBins_2010]={39.,26.,13};
+float N1S_aa_rap3p5_2014[nRapBins_2014] = {490.817,506.78,570.804,512.765,375.383,118.497};
+float N1S_aa_rap3p5_2014e[nRapBins_2014] = {31.3657,35.0903,38.568,37.6318,31.452,18.1268};
+float N2S_aa_rap3p5[nRapBins_2014] = {19.8274,54.0754,31.1618,-8.478,41.2374,5.71804};
+float N2S_aa_rap3p5e[nRapBins_2014] = {20.8224,26.0765,26.9882,24.9951,20.1535,11.255};
+float N2S_aa_rap4_2014Large[nRapBins_2010] = {83.0694,52.3694};
+float N2S_aa_rap4_2014Largee[nRapBins_2010] = {29.9647,27.1147};
+float N1S_aa_rap4_2014Large[nRapBins_2010] = {1054.52,693.517};
+float N1S_aa_rap4_2014Largee[nRapBins_2010] = {45.4284,40.0771};
+float N1S_aa_pt3p5[nPtBins_2013] = {725.578,700.694,515.951,349.402,182.037};
+float N1S_aa_pt3p5e[nPtBins_2013] = {43.222,41.8636,36.5595,40.0363,16.6537};
+float N2S_aa_pt3p5[nPtBins_2013] = {11.3525,56.9485,13.9029,29.1776,22.4181};
+float N2S_aa_pt3p5e[nPtBins_2013] = {27.4325,29.1529,25.457,28.8449,9.47339};
+float N1S_aa_pt4[nPtBins_2013] = {440.993,398.654,349.214,290.442,162.54};
+float N1S_aa_pt4e[nPtBins_2013] = {33.4403,29.9976,27.5772,24.5429,15.4982};
+float N2S_aa_pt4_2013Large[nPtBins_2010] = {62.5574,18.8922,21.8201};
+float N2S_aa_pt4_2013Largee[nPtBins_2010] = {33.4764,18.9991,12.3811};
+float N1S_aa_pt4_2013Large[nPtBins_2010] = {1054.77,304.952,293.117};
+float N1S_aa_pt4_2013Largee[nPtBins_2010] = {48.3581,27.4976,21.5473};
+float N1S_aa_cent3p5[nCentBins_2014] = {48.2829,173.952,172.083,288.917,438.602,646.191,411.335,412.229};
+float N1S_aa_cent3p5e[nCentBins_2014] = {9.00598,17.2041,18.5096,24.7382,31.9025,40.348,33.3496,36.3436};
+float N1S_aa_cent4[nCentBins_2014-1] = {160,107,215.137,315.578,440.382,277.322,302.788}; //149.497,89.9569
+float N1S_aa_cent4e[nCentBins_2014-1] = {15.5456,13.1752,20.3204,24.2413,30.1667,24.6636,27.1465};
+float N2S_aa_cent4[bin1] = {12.5547,21.7397,36.0665,30.8685,24.8739,2.59681,29.2158};
+float N2S_aa_cent4e[bin1] = {9.27443,9.76781,13.8025,15.7822,20.1582,15.5757,19.4574};
+/* float N1S_aa_y120[2] = {628.687,896.043}; */
+/* float N1S_aa_y120e[2] = {34.5313,46.832}; */
+/* float N1S_aa_y240[2] = {482.051,512.908}; */
+/* float N1S_aa_y240e[2] = {32.7068,40.6259}; */
+/* float N1S_aa_pt5[2] = {621.513,811.318}; */
+/* float N1S_aa_pt5e[2] = {37.7155,48.8599}; */
+/* float N1S_aa_pt12[2] = {398.64,496.135}; */
+/* float N1S_aa_pt12e[2] = {28.3544,38.1232}; */
+/* float N1S_aa_pt20[2] = {64.1709,113.79}; */
+/* float N1S_aa_pt20e[2] = {9.6791,13.3602}; */
 
-//PROTON PROTON
-/* float N1S_pp_rap3p5_2014[nRapBins_2014] = {1110,1130,1010,988,830,359}; //largebin=1289 */
-/* float N1S_pp_rap3p5_2014e[nRapBins_2014]= {44.7,49.7,47.6,43.6,41.2,23.8}; // largebin=51.7 */
-/* float N1S_pp_rap3p5_2014[nRapBins_2014]={1043.5,1124.69,1007.1,967.16,808.658,372.962}; *///Open trigger
-/* float N1S_pp_rap3p5_2014e[nRapBins_2014]={36.6026,39.9872,39.123,39.7542,37.6477,23.2556}; */
-float N1S_pp_rap3p5_2014[nRapBins_2014] = {1045.8,1114.99,971.794,892.208,655.377,249.099}; //highQ
-float N1S_pp_rap3p5_2014e[nRapBins_2014] = {36.732,39.9483,38.4188,37.9055,32.4348,19.3658};
 
-float N1S_pp_rap4_2014[nRapBins_2014]={785,836,699,660,601,265};  ///largebin 830};//
-float N1S_pp_rap4_2014e[nRapBins_2014]={35.6,38,41.4,33.9,70.9,23}; //largebin = 36.9
+/* //PROTON PROTON */
+/* /\* float N1S_pp_rap3p5_2014[nRapBins_2014] = {1110,1130,1010,988,830,359}; //largebin=1289 *\/ */
+/* /\* float N1S_pp_rap3p5_2014e[nRapBins_2014]= {44.7,49.7,47.6,43.6,41.2,23.8}; // largebin=51.7 *\/ */
+/* /\* float N1S_pp_rap3p5_2014[nRapBins_2014]={1043.5,1124.69,1007.1,967.16,808.658,372.962}; *\///Open trigger */
+/* /\* float N1S_pp_rap3p5_2014e[nRapBins_2014]={36.6026,39.9872,39.123,39.7542,37.6477,23.2556}; *\/ */
+/* float N1S_pp_rap3p5_2014[nRapBins_2014] = {1045.8,1114.99,971.794,892.208,655.377,249.099}; //highQ */
+/* float N1S_pp_rap3p5_2014e[nRapBins_2014] = {36.732,39.9483,38.4188,37.9055,32.4348,19.3658}; */
+/* float N1S_pp_rap4_2014[nRapBins_2014]={785,836,699,660,601,265};  ///largebin 830};// */  // OOOOLD trig!
+/* float N1S_pp_rap4_2014e[nRapBins_2014]={35.6,38,41.4,33.9,70.9,23}; //largebin = 36.9 */
+float N1S_pp_rap4_2014[nRapBins_2014] = {755.141,797.298,678.897,595.653,434.373,173.238};
+float N1S_pp_rap4_2014e[nRapBins_2014] = {30.6288,33.0107,31.3006,30.3759,27.4019,16.486};
 
-/* float N2S_pp_rap3p5_2014[nRapBins_2014]= {360,347,315,341,276,63.9}; //open */
-/* float N2S_pp_rap3p5_2014e[nRapBins_2014]={27.1,27.9,29.3,30,28.6,14.3}; */
-float N2S_pp_rap3p5_2014[nRapBins_2014] = {316.234,338.689,308.931,305.157,229.726,50.7125}; //highQ
-float N2S_pp_rap3p5_2014e[nRapBins_2014] = {24.0715,25.9207,26.8278,27.3601,23.4638,12.9031};
-/* float N2S_pp_rap4_2014[nRapBins_2014]={265,277,239,241,254,62.3}; //open */
-/* float N2S_pp_rap4_2014e[nRapBins_2014]={22.9,24.3,24,24.9,47.4,13.9}; */
-float N2S_pp_rap4_2014[nRapBins_2014] = {241.004,257.264,229.192,218.071,179.066,45.9916}; //highQ
-float N2S_pp_rap4_2014e[nRapBins_2014] = {19.9981,21.644,21.2744,22.3079,20.8062,11.7197};
-/* float N2S_pp_rap4_2014Large[nRapBins_2010]={2290,1470}; */
-/* float N2S_pp_rap4_2014Largee[nRapBins_2010]={67.9,63.6}; */
-/* float N2S_pp_rap4_2014Large[nRapBins_2010]={714.061,497.992}; */ //open
-/* float N2S_pp_rap4_2014Largee[nRapBins_2010]={36,37.8979}; */
-float N2S_pp_rap4_2014Large[nRapBins_2010] = {706.144,435.857}; //highQ
-float N2S_pp_rap4_2014Largee[nRapBins_2010] = {35.7708,36.5077};
-
-/* float N3S_pp_rap3p5_2014[nRapBins_2013]={170,175,179,121,189};//,111,74.9}; //open */
-/* float N3S_pp_rap3p5_2014e[nRapBins_2013]={21.2,23.3,25.7,24.9,28.2};//;,24.1,14.3}; */
-float N3S_pp_rap3p5_2014[nRapBins_2014] = {140.577,167.214,165.89,113.125,87.8148,56.0211}; //highQ
-float N3S_pp_rap3p5_2014e[nRapBins_2014] = {19.0652,21.8788,23.189,22.6344,19.3827,12.5086};
-/* float N3S_pp_rap4_2014[nRapBins_2014]={134,138,138,96,108,67.3}; //175} */
-/* float N3S_pp_rap4_2014e[nRapBins_2014]={18.1,20.7,20.5,20.7,37,14.5}; // 23.4 */
-/* float N3S_pp_rap4_2014[nRapBins_2014]={117.8,126.87,131.51,95.9781,92.4825,67.7779}; //open */
-/* float N3S_pp_rap4_2014e[nRapBins_2014]={15.9977,17.7523,18.5524,19.0335,31.3553,13.4012}; */
-float N3S_pp_rap4_2014[nRapBins_2014] = {115.373,128.482,135.999,85.7138,71.7167,46.4221}; //highQ
-float N3S_pp_rap4_2014e[nRapBins_2014] = {16.0236,17.9384,18.4957,18.3729,17.3947,11.4625};
-float N3S_pp_rap4_2014Large[nRapBins_2010] = {360.713,196.843};
-float N3S_pp_rap4_2014Largee[nRapBins_2010] = {29.9762,31.3335};
-
-float N2S_pp_pt3p5_2013[nPtBins_2013] = {433,529,378,266,144};//31.2
-float N2S_pp_pt3p5_2013e[nPtBins_2013] = {45,41,28,23,15};//7.6
-/* float N2S_pp_pt4_2013[nPtBins_2013]={372.739,250.364,251.718,200.114,124.341}; */ //open
-/* float N2S_pp_pt4_2013e[nPtBins_2013]={28.082,23.514,21.9586,17.523,13.319}; */
-float N2S_pp_pt4_2013[nPtBins_2013] = {301.791,257.089,243.196,188.89,113.466};//highQ
-float N2S_pp_pt4_2013e[nPtBins_2013] = {28.9903,23.9729,20.3855,17.0605,12.7171};
-/* float N2S_pp_pt4_2013[nPtBins_2013] = {318,302,274,230,131};//31.7 */
-/* float N2S_pp_pt4_2013e[nPtBins_2013] = {34,30,22,21,15};//8.0 */
-/* float N2S_pp_pt4_2013Large[nPtBins_2010]={827,287,200}; */
-/* float N2S_pp_pt4_2013Largee[nPtBins_2010]={168,23,31}; */
-/* float N2S_pp_pt4_2013Large[nPtBins_2010]={725.214,248.916,189.512};//open */
-/* float N2S_pp_pt4_2013Largee[nPtBins_2010]={40.9265,20.2315,16.7928}; */
-float N2S_pp_pt4_2013Large[nPtBins_2010] = {695.703,234.325,173.997};//highQ
-float N2S_pp_pt4_2013Largee[nPtBins_2010] = {39.8716,19.732,16.0895};
-
-/* float N3S_pp_pt4_2013[nPtBins_2013] = {141,199,134,108,75};//23.4 */
-/* float N3S_pp_pt4_2013e[nPtBins_2013] = {27,28,18,16,12};//7.2 */
-/* float N3S_pp_pt4_2013[nPtBins_2013]={186.882,165.105,118.457,89.0954,71.8379}; //open */
-/* float N3S_pp_pt4_2013e[nPtBins_2013]={23.4312,21.1747,17.7216,13.491,10.8839}; */
-float N3S_pp_pt4_2013[nPtBins_2013] = {128.482,168.485,112.074,84.2136,69.3291}; //highQ
-float N3S_pp_pt4_2013e[nPtBins_2013] = {24.0888,21.6864,16.513,13.1443,10.6023};
-
+/* /\* float N2S_pp_rap3p5_2014[nRapBins_2014]= {360,347,315,341,276,63.9}; //open *\/ */
+/* /\* float N2S_pp_rap3p5_2014e[nRapBins_2014]={27.1,27.9,29.3,30,28.6,14.3}; *\/ */
+/* float N2S_pp_rap3p5_2014[nRapBins_2014] = {316.234,338.689,308.931,305.157,229.726,50.7125}; //highQ */
+/* float N2S_pp_rap3p5_2014e[nRapBins_2014] = {24.0715,25.9207,26.8278,27.3601,23.4638,12.9031}; */
+/* /\* float N2S_pp_rap4_2014[nRapBins_2014]={265,277,239,241,254,62.3}; //open *\/ */
+/* /\* float N2S_pp_rap4_2014e[nRapBins_2014]={22.9,24.3,24,24.9,47.4,13.9}; *\/ */
+/* float N2S_pp_rap4_2014[nRapBins_2014] = {241.004,257.264,229.192,218.071,179.066,45.9916}; //highQ */
+/* float N2S_pp_rap4_2014e[nRapBins_2014] = {19.9981,21.644,21.2744,22.3079,20.8062,11.7197}; */
+/* /\* float N2S_pp_rap4_2014Large[nRapBins_2010]={2290,1470}; *\/ */
+/* /\* float N2S_pp_rap4_2014Largee[nRapBins_2010]={67.9,63.6}; *\/ */
+/* /\* float N2S_pp_rap4_2014Large[nRapBins_2010]={714.061,497.992}; *\/ //open */
+/* /\* float N2S_pp_rap4_2014Largee[nRapBins_2010]={36,37.8979}; *\/ */
+/* float N2S_pp_rap4_2014Large[nRapBins_2010] = {706.144,435.857}; //highQ */
+/* float N2S_pp_rap4_2014Largee[nRapBins_2010] = {35.7708,36.5077}; */
+/* /\* float N3S_pp_rap3p5_2014[nRapBins_2013]={170,175,179,121,189};//,111,74.9}; //open *\/ */
+/* /\* float N3S_pp_rap3p5_2014e[nRapBins_2013]={21.2,23.3,25.7,24.9,28.2};//;,24.1,14.3}; *\/ */
+/* float N3S_pp_rap3p5_2014[nRapBins_2014] = {140.577,167.214,165.89,113.125,87.8148,56.0211}; //highQ */
+/* float N3S_pp_rap3p5_2014e[nRapBins_2014] = {19.0652,21.8788,23.189,22.6344,19.3827,12.5086}; */
+/* /\* float N3S_pp_rap4_2014[nRapBins_2014]={134,138,138,96,108,67.3}; //175} *\/ */
+/* /\* float N3S_pp_rap4_2014e[nRapBins_2014]={18.1,20.7,20.5,20.7,37,14.5}; // 23.4 *\/ */
+/* /\* float N3S_pp_rap4_2014[nRapBins_2014]={117.8,126.87,131.51,95.9781,92.4825,67.7779}; //open *\/ */
+/* /\* float N3S_pp_rap4_2014e[nRapBins_2014]={15.9977,17.7523,18.5524,19.0335,31.3553,13.4012}; *\/ */
+/* float N3S_pp_rap4_2014[nRapBins_2014] = {115.373,128.482,135.999,85.7138,71.7167,46.4221}; //highQ */
+/* float N3S_pp_rap4_2014e[nRapBins_2014] = {16.0236,17.9384,18.4957,18.3729,17.3947,11.4625}; */
+/* float N3S_pp_rap4_2014Large[nRapBins_2010] = {360.713,196.843}; */
+/* float N3S_pp_rap4_2014Largee[nRapBins_2010] = {29.9762,31.3335}; */
+/* float N2S_pp_pt3p5_2013[nPtBins_2013] = {433,529,378,266,144};//31.2 */
+/* float N2S_pp_pt3p5_2013e[nPtBins_2013] = {45,41,28,23,15};//7.6 */
+/* /\* float N2S_pp_pt4_2013[nPtBins_2013]={372.739,250.364,251.718,200.114,124.341}; *\/ //open */
+/* /\* float N2S_pp_pt4_2013e[nPtBins_2013]={28.082,23.514,21.9586,17.523,13.319}; *\/ */
+/* float N2S_pp_pt4_2013[nPtBins_2013] = {301.791,257.089,243.196,188.89,113.466};//highQ */
+/* float N2S_pp_pt4_2013e[nPtBins_2013] = {28.9903,23.9729,20.3855,17.0605,12.7171}; */
+/* /\* float N2S_pp_pt4_2013[nPtBins_2013] = {318,302,274,230,131};//31.7 *\/ */
+/* /\* float N2S_pp_pt4_2013e[nPtBins_2013] = {34,30,22,21,15};//8.0 *\/ */
+/* /\* float N2S_pp_pt4_2013Large[nPtBins_2010]={827,287,200}; *\/ */
+/* /\* float N2S_pp_pt4_2013Largee[nPtBins_2010]={168,23,31}; *\/ */
+/* /\* float N2S_pp_pt4_2013Large[nPtBins_2010]={725.214,248.916,189.512};//open *\/ */
+/* /\* float N2S_pp_pt4_2013Largee[nPtBins_2010]={40.9265,20.2315,16.7928}; *\/ */
+/* float N2S_pp_pt4_2013Large[nPtBins_2010] = {695.703,234.325,173.997};//highQ */
+/* float N2S_pp_pt4_2013Largee[nPtBins_2010] = {39.8716,19.732,16.0895}; */
+/* /\* float N3S_pp_pt4_2013[nPtBins_2013] = {141,199,134,108,75};//23.4 *\/ */
+/* /\* float N3S_pp_pt4_2013e[nPtBins_2013] = {27,28,18,16,12};//7.2 *\/ */
+/* /\* float N3S_pp_pt4_2013[nPtBins_2013]={186.882,165.105,118.457,89.0954,71.8379}; //open *\/ */
+/* /\* float N3S_pp_pt4_2013e[nPtBins_2013]={23.4312,21.1747,17.7216,13.491,10.8839}; *\/ */
+/* float N3S_pp_pt4_2013[nPtBins_2013] = {128.482,168.485,112.074,84.2136,69.3291}; //highQ */
+/* float N3S_pp_pt4_2013e[nPtBins_2013] = {24.0888,21.6864,16.513,13.1443,10.6023}; */
 float N3S_pp_pt3p5_2013[nPtBins_2013] = {203,282,184,130,83};//21
 float N3S_pp_pt3p5_2013e[nPtBins_2013] = {36,34,23,17,13};//6.5
-float N3S_pp_pt4_2013Large[nPtBins_2010] = {358.951,91.1538,99.0478};
-float N3S_pp_pt4_2013Largee[nPtBins_2010] = {34.5618,15.0331,13.0713};
+/* float N3S_pp_pt4_2013Large[nPtBins_2010] = {358.951,91.1538,99.0478}; */
+/* float N3S_pp_pt4_2013Largee[nPtBins_2010] = {34.5618,15.0331,13.0713}; */
 
 
-////yields in the note
-//trying now with yields from plots, waiting for the Arleo ones. 25th apr. 2014
-/* float N1S_pp_pt3p5[nPtBins_2013] = {1717,1550,1107,691,352}; // ,62.5 */
-/* float N1S_pp_pt3p5e[nPtBins_2013] = {80,64,43,43,23}; // ,9.9 */
-/* float N1S_pp_pt3p5[nPtBins_2013]={1623.31,1520.25,1023.34,633.098,344.566}; */ //open
-/* float N1S_pp_pt3p5e[nPtBins_2013]={50.737,47.6386,36.7225,28.3172,20.396}; */
-float N1S_pp_pt3p5[nPtBins_2013] = {1499.27,1418.6,972.688,602.121,337.012}; //highQ
-float N1S_pp_pt3p5e[nPtBins_2013] = {49.2967,45.7898,28.4194,27.578,20.1226};
-float N1S_pp_pt4[nPtBins_2013] = {954.099,806.429,719.354,515.821,304.747};
-float N1S_pp_pt4e[nPtBins_2013] = {39.8429,34.6068,30.325,25.261,19.0581};
-
-
+/* ////yields in the note */
+/* //trying now with yields from plots, waiting for the Arleo ones. 25th apr. 2014 */
+/* /\* float N1S_pp_pt3p5[nPtBins_2013] = {1717,1550,1107,691,352}; // ,62.5 *\/ */
+/* /\* float N1S_pp_pt3p5e[nPtBins_2013] = {80,64,43,43,23}; // ,9.9 *\/ */
+/* /\* float N1S_pp_pt3p5[nPtBins_2013]={1623.31,1520.25,1023.34,633.098,344.566}; *\/ //open */
+/* /\* float N1S_pp_pt3p5e[nPtBins_2013]={50.737,47.6386,36.7225,28.3172,20.396}; *\/ */
+/* float N1S_pp_pt3p5[nPtBins_2013] = {1499.27,1418.6,972.688,602.121,337.012}; //highQ */
+/* float N1S_pp_pt3p5e[nPtBins_2013] = {49.2967,45.7898,28.4194,27.578,20.1226}; */
+/* float N1S_pp_pt4[nPtBins_2013] = {954.099,806.429,719.354,515.821,304.747}; */
+/* float N1S_pp_pt4e[nPtBins_2013] = {39.8429,34.6068,30.325,25.261,19.0581}; */
 
 float N1S_pp_pt3p5U[nPtBins_2013] = {1718,1546.18,1109.26,692.5,350}; // ,62.8
 float N1S_pp_pt3p5eU[nPtBins_2013]= {81,65,44,44,23}; // ,9.9,10
-float N1S_pp_pt3p5Large[nPtBins_2010]={3856,910,586};
-float N1S_pp_pt3p5eLarge[nPtBins_2010]={97,37,29};
-float N1S_pp_rap3p5[nRapBins_2013] = {1102,844,795,1198,1427}; 
-float N1S_pp_rap3p5e[nRapBins_2013] = {47,42,37,47,49};
+/* /\* float N1S_pp_pt3p5Large[nPtBins_2010]={3856,910,586}; *\/ // 0-6p5-10-20 */
+/* /\* float N1S_pp_pt3p5eLarge[nPtBins_2010]={97,37,29}; *\/ */
+/* float N1S_pp_pt3p5Large[nPtBins_2010] = {3440.53,798.368,558.817}; */
+/* float N1S_pp_pt3p5Largee[nPtBins_2010] = {72.8418,32.1636,26.1766}; */
+/* float N1S_pp_rap3p5[nRapBins_2013] = {1102,844,795,1198,1427};  */
+/* float N1S_pp_rap3p5e[nRapBins_2013] = {47,42,37,47,49}; */
+
+/* float N2S_pp_pt3p5Large[nPtBins_2010] = {1166,335,227}; // for CS2S_pp_ptLarge */
+/* float N2S_pp_pt3p5Largee[nPtBins_2010]= {64,26,35}; */
+/* float N2S_pp_pt3p5[nPtBins_2013] = {372.615,491.722,318.957,218.694,123.526}; */
+/* float N2S_pp_pt3p5e[nPtBins_2013] = {32.2694,32.2999,19.49,18.7975,13.4272}; */
+/* float N2S_pp_rap3p5[nRapBins_2010] = {1033,697}; // for CS2S_pp_rapLarge */
+/* float N2S_pp_rap3p5e[nRapBins_2010]= {51,41}; */
 
 
-float N2S_pp_pt3p5Large[nPtBins_2010] = {1166,335,227}; // for CS2S_pp_ptLarge
-float N2S_pp_pt3p5Largee[nPtBins_2010]= {64,26,35};
-float N2S_pp_pt3p5[nPtBins_2013] = {372.615,491.722,318.957,218.694,123.526};
-float N2S_pp_pt3p5e[nPtBins_2013] = {32.2694,32.2999,19.49,18.7975,13.4272};
+float N1S_pp_pt3p5[nPtBins_2013] = {1499.27,1418.6,972.688,602.121,337.012};
+float N1S_pp_pt3p5e[nPtBins_2013] = {49.2967,45.7898,28.4194,27.578,20.1226};
+float N1S_pp_pt3p5Large[nPtBins_2010] = {2970.5,1600.85,337.012};
+float N1S_pp_pt3p5Largee[nPtBins_2010] = {69.3649,46.0042,20.1226};
+float N1S_pp_pt4[nPtBins_2013] = {954.099,806.429,719.354,515.821,304.747};
+float N1S_pp_pt4e[nPtBins_2013] = {39.8429,34.6068,30.325,25.261,19.0581};
+float N2S_pp_pt3p5_2013[nPtBins_2013] = {372.615,491.722,318.957,218.694,123.526};
+float N2S_pp_pt3p5_2013e[nPtBins_2013] = {32.2694,32.2999,19.49,18.7975,13.4272};
+float N1S_pp_rap3p5_2014[nRapBins_2014] = {1045.8,1114.99,971.794,892.208,655.377,249.099};
+float N1S_pp_rap3p5_2014e[nRapBins_2014] = {36.732,39.9483,38.4188,37.9055,32.4348,19.3658};
+float N2S_pp_rap3p5_2014[nRapBins_2014] = {316.234,338.689,308.931,305.157,229.726,50.7125};
+float N2S_pp_rap3p5_2014e[nRapBins_2014] = {24.0715,25.9207,26.8278,27.3601,23.4638,12.9031};
+float N3S_pp_rap3p5_2014[nRapBins_2014] = {140.577,167.214,165.89,113.125,87.8148,56.0211};
+float N3S_pp_rap3p5_2014e[nRapBins_2014] = {19.0652,21.8788,23.189,22.6344,19.3827,12.5086};
+float N2S_pp_pt4_2013Large[nPtBins_2010] = {695.703,234.325,173.997};
+float N2S_pp_pt4_2013Largee[nPtBins_2010] = {39.8716,19.732,16.0895};
+float N3S_pp_pt4_2013Large[nPtBins_2010] = {358.951,91.1538,99.0478};
+float N3S_pp_pt4_2013Largee[nPtBins_2010] = {34.5618,15.0331,13.0713};
+float N1S_pp_pt4_2013Large[nPtBins_2010] = {2193.61,630.642,503.002};
+float N1S_pp_pt4_2013Largee[nPtBins_2010] = {57.4966,28.895,24.7048};
+float N2S_pp_rap4_2014Large[nRapBins_2010] = {706.144,435.857};
+float N2S_pp_rap4_2014Largee[nRapBins_2010] = {35.7708,36.5077};
+float N3S_pp_rap4_2014Large[nRapBins_2010] = {360.713,196.843};
+float N3S_pp_rap4_2014Largee[nRapBins_2010] = {29.9762,31.3335};
+float N2S_pp_pt4_2013[nPtBins_2013] = {301.791,257.089,243.196,188.89,113.466};
+float N2S_pp_pt4_2013e[nPtBins_2013] = {28.9903,23.9729,20.3855,17.0605,12.7171};
+float N2S_pp_rap4_2014[nRapBins_2014] = {241.004,257.264,229.192,218.071,179.066,45.9916};
+float N2S_pp_rap4_2014e[nRapBins_2014] = {19.9981,21.644,21.2744,22.3079,20.8062,11.7197};
+float N3S_pp_pt4_2013[nPtBins_2013] = {128.482,168.485,112.074,84.2136,69.3291};
+float N3S_pp_pt4_2013e[nPtBins_2013] = {24.0888,21.6864,16.513,13.1443,10.6023};
+float N3S_pp_rap4_2014[nRapBins_2014] = {115.373,128.482,135.999,85.7138,71.7167,46.4221};
+float N3S_pp_rap4_2014e[nRapBins_2014] = {16.0236,17.9384,18.4957,18.3729,17.3947,11.4625};
 
+// DOUBLE DIFFERENTIAL STUFF
+// arrays for nPart dep pt/y-binned data
+float N1S_pp_pt3p5_2010[nPtBins_2010] = {2971,1601,337};
+float N1S_pp_pt3p5_2010e[nPtBins_2010] = {69,46,20};
+float N1S_pp_rap3p5_2010[nRapBins_2010] = {3068,1772};
+float N1S_pp_rap3p5_2010e[nRapBins_2010] = {65,54};
+float N1S_aa_y120[2] = {628.687,896.043};
+float N1S_aa_y120e[2] = {34.5313,46.832};
+float N1S_aa_y240[2] = {482.051,512.908};
+float N1S_aa_y240e[2] = {32.7068,40.6259};
+float N1S_aa_pt5[2] = {621.513,811.318};
+float N1S_aa_pt5e[2] = {37.7155,48.8599};
+float N1S_aa_pt12[2] = {398.64,496.135};
+float N1S_aa_pt12e[2] = {28.3544,38.1232};
+float N1S_aa_pt20[2] = {64.1709,113.79};
+float N1S_aa_pt20e[2] = {9.6791,13.3602};
+//other way to bin: pt/y-dependent nPart-binned
+//20-100,then 0-20 
+//commented ones - for ptMu>4 GeV, should be updated.
+/* float Aet_1S_pyquen_y120[nRapBins_2010]= {0.181,0.174}; */
+/* float Aet_1S_pyquen_y120e[nRapBins_2010]={0.002,0.003}; */
+/* float Aet_1S_pyquen_y240[nRapBins_2010] ={0.132,0.142}; */
+/* float Aet_1S_pyquen_y240e[nRapBins_2010]={0.003,0.003}; */
+/* float Aet_1S_pyquen_pt5[nRapBins_2010]=   {0.227,0.215}; */
+/* float Aet_1S_pyquen_pt5e[nRapBins_2010]=  {0.002,0.003}; */
+/* float Aet_1S_pyquen_pt12[nRapBins_2010]=  {0.228,0.218}; */
+/* float Aet_1S_pyquen_pt12e[nRapBins_2010]= {0.004,0.004}; */
+/* float Aet_1S_pyquen_pt20[nRapBins_2010]=  {0.356,0.341}; */
+/* float Aet_1S_pyquen_pt20e[nRapBins_2010]= {0.004,0.005}; */
+//20-100,then 0-20 
+float Aet_1S_pyquen_y120[nRapBins_2010]= {0.259,0.249}; 
+float Aet_1S_pyquen_y120e[nRapBins_2010]={0.002,0.003};
+float Aet_1S_pyquen_y240[nRapBins_2010] ={0.211,0.196};
+float Aet_1S_pyquen_y240e[nRapBins_2010]={0.003,0.003};
+float Aet_1S_pyquen_pt5[nRapBins_2010]=   {0.236,0.224};
+float Aet_1S_pyquen_pt5e[nRapBins_2010]=  {0.002,0.003};
+float Aet_1S_pyquen_pt12[nRapBins_2010]=  {0.217,0.207};
+float Aet_1S_pyquen_pt12e[nRapBins_2010]= {0.004,0.004};
+float Aet_1S_pyquen_pt20[nRapBins_2010]=  {0.395,0.379};
+float Aet_1S_pyquen_pt20e[nRapBins_2010]= {0.004,0.005};
+///BELOW: NOT THE SAME PT BINS....can't be used.
+float Ae_1S_pyquen_DD020[nRapBins_2010]={0.266,0.305};
+float Ae_1S_pyquen_DD20100[nRapBins_2010]={0.278,0.328};
+float Ae_1S_pyquen_DD020e[nRapBins_2010]={0.002,0.0032};
+float Ae_1S_pyquen_DD20100e[nRapBins_2010]={0.0017,0.0027};
+float Aet_1S_pyquen_DDR020[nRapBins_2010]={0.249,0.196};
+float Aet_1S_pyquen_DDR020e[nRapBins_2010]={0.003,0.003};
+float Aet_1S_pyquen_DDR20100[nRapBins_2010]={0.259,0.211};
+float Aet_1S_pyquen_DDR20100e[nRapBins_2010]={0.003,0.003};
+float Aet_1S_pyquen_DDP020[nPtBins_2010]={0.215,0.218,0.341};
+float Aet_1S_pyquen_DDP020e[nPtBins_2010]={0.003,0.004,0.005};
+float Aet_1S_pyquen_DDP20100[nPtBins_2010]={0.227,0.228,0.356};
+float Aet_1S_pyquen_DDP20100e[nPtBins_2010]={0.002,0.004,0.004};
+float e_1S_pyquen_DD020[nRapBins_2010]={0.596,0.577};
+float e_1S_pyquen_DD20100[nRapBins_2010]={0.621,0.622};
+float e_1S_pyquen_DD020e[nRapBins_2010]={0.0051,0.0066};
+float e_1S_pyquen_DD20100e[nRapBins_2010]={0.0043,0.0057};
+float A_1S_pyquen_DD020[nRapBins_2010]={0.447,0.530};
+float A_1S_pyquen_DD20100[nRapBins_2010]={0.449,0.528};
+float A_1S_pyquen_DD020e[nRapBins_2010]={0.0024,0.0039};
+float A_1S_pyquen_DD20100e[nRapBins_2010]={0.0020,0.0032};
+float t_1S_pyquen_DDR020[nRapBins_2010]= {1.067,1.122};
+float t_1S_pyquen_DDR20100[nRapBins_2010]= {1.067,1.122};
+float t_1S_pyquen_DDP020[nPtBins_2010]=   {1.099,1.066,1.043};
+float t_1S_pyquen_DDP20100[nPtBins_2010]=   {1.1,1.066,1.043};
 
-float N2S_pp_rap3p5[nRapBins_2010] = {1033,697}; // for CS2S_pp_rapLarge
-float N2S_pp_rap3p5e[nRapBins_2010]= {51,41};
-
-
+/// INTEGRATED STUFF
 /* float N1S_pp_tot3p5=5512; */
 /* float N1S_pp_tot3p5e=116; */
 
@@ -905,11 +1076,14 @@ float N1S_pp_rap3p5s[nRapBins_2014]={0.0873,0.0630,0.0522,0.0962,0.0629,0.0436};
 float N1S_aa_rap3p5s[nRapBins_2014]={0.1122,0.0746,0.1883,0.2029,0.4291,0.3936};
 
 // from fitting.
-float N1S_pp_tot3p5s=0.0673;
-float N1S_aa_tot3p5s=0.1361;
+float N1S_pp_tot3p5s=0.0135;
+float N1S_aa_tot3p5s=0.0291;
  // from fitting.
-float N1S_pp_tot4s=0.0791;
-float N1S_aa_tot4s=0.1211;
+float N1S_pp_tot4s=0.0160;
+float N1S_aa_tot4s=0.0281;
+
+float N2S_pp_tot4s=0.0209;
+float N2S_aa_tot4s=0.0712;
 
 //fit+bkg vars
 float N1S_pp_pt3p5s_2p5[nfitvars] = {1550.15,1497.98,1591.3,1614.17,1574.54};
@@ -921,12 +1095,12 @@ float N2S_pp_pt4s_2p5[nfitvars] = {287.297,298.987,305.301,302.169,304.997};
 float N2S_pp_pt4s_5[nfitvars] = {245.22,255.444,258.758,257.947,260.807};
 float N2S_pp_pt4s_8[nfitvars] = {247.881,249.625,250.597,249.841,250.459};
 float N2S_pp_pt4s_12[nfitvars] = {198.904,199.68,199.002,198.033,197.859};
-float N2S_pp_pt4s_20[nfitvars] = {113.168,113.473,113.767,113.126,113.73};
+float N2S_pp_pt4s_20[nfitvars] = {115.581,117.531,115.071,115.04,115.075};
 float N3S_pp_pt4s_2p5[nfitvars] = {118.876,126.71,130.525,128.681,130.324};
 float N3S_pp_pt4s_5[nfitvars] = {158.647,167.073,169.625,168.936,170.851};
 float N3S_pp_pt4s_8[nfitvars] = {116.325,117.365,116.398,114.615,115.738};
 float N3S_pp_pt4s_12[nfitvars] = {93.8629,92.1802,89.1508,86.8052,88.7491};
-float N3S_pp_pt4s_20[nfitvars] = {68.4465,69.3293,69.5748,69.1804,69.4976};
+float N3S_pp_pt4s_20[nfitvars] = {70.3274,71.3663,69.1248,69.067,69.0902};
 float N1S_pp_rap3p5s_0p4[nfitvars] = {1083.6,1073.14,1091.47,1100.48,1079.09};
 float N1S_pp_rap3p5s_0p8[nfitvars] = {1139.36,1097.09,1147.98,1118.5,1178.18};
 float N1S_pp_rap3p5s_1p2[nfitvars] = {956.711,969.94,984.275,984.072,983.597};
@@ -949,10 +1123,15 @@ float N1S_aa_pt3p5s_2p5[nfitvars] = {864.322,919.319,779.047,733.57,741.833};
 float N1S_aa_pt3p5s_5[nfitvars] = {775.593,741.434,780.944,779.249,772.128};
 float N1S_aa_pt3p5s_8[nfitvars] = {541.362,720.636,497.992,505.485,494.108};
 float N1S_aa_pt3p5s_12[nfitvars] = {338.81,349.307,364.487,364.736,364.633};
-float N1S_aa_pt3p5s_20[nfitvars] = {338.81,349.307,364.487,364.736,364.633};
-float N2S_aa_pt4s_6p5[nfitvars] = {65.4384,63.553,59.7498,64.3404,63.8061};
-float N2S_aa_pt4s_10[nfitvars] = {26.0016,35.9108,20.9523,21.2272,21.1887};
-float N2S_aa_pt4s_20[nfitvars] = {21.4984,21.1819,22.1259,22.1392,22.1022};
+float N1S_aa_pt3p5s_20[nfitvars] = {185.255,183.02,185.896,185.657,184.771};
+float N2S_ppLarge_pt4s_6p5[nfitvars] = {551.179,553.025,571.188,568.63,572.771};
+float N2S_ppLarge_pt4s_10[nfitvars] = {562.149,445.168,451.259,445.814,450.442};
+float N2S_ppLarge_pt4s_20[nfitvars] = {115.581,117.531,115.071,115.04,115.075};
+float N2S_aa_pt4s_6p5[nfitvars] = {48.0053,46.8559,49.1463,44.8339,48.8767};
+float N2S_aa_pt4s_10[nfitvars] = {36.3397,36.3207,33.2337,35.0106,34.1506};
+float N2S_aa_pt4s_20[nfitvars] = {23.8612,24.119,22.6338,23.0412,22.6583};
+float N2S_ppLarge_rap4s_1p2[nfitvars] = {728.075,719.228,749.114,747.333,744.183};
+float N2S_ppLarge_rap4s_2p4[nfitvars] = {460.114,436.574,468.368,457.059,466.881};
 float N1S_aa_rap3p5s_0p4[nfitvars] = {502.025,502.361,493.918,497.558,496.988};
 float N1S_aa_rap3p5s_0p8[nfitvars] = {540.836,530.507,495.908,498.547,495.499};
 float N1S_aa_rap3p5s_1p2[nfitvars] = {601.225,619.093,633.024,636.619,629.831};
@@ -968,14 +1147,21 @@ float N1S_aa_cents_30[nfitvars] = {442.688,435.957,441.18,439.612,442.168};
 float N1S_aa_cents_40[nfitvars] = {331.487,328.472,318.416,305.767,318.83};
 float N1S_aa_cents_50[nfitvars] = {216.306,197.265,186.187,182.28,184.922};
 float N1S_aa_cents_70[nfitvars] = {170.127,167.533,183.742,174.841,183.234};
-float N1S_aa_cents_100[nfitvars] = {};
+float N1S_aa_cents_100[nfitvars] = {63.6157,55.791,42.1689,51.6209,43.3572};
+float N1S_aa_cent4s_5[nfitvars] = {383.725,370.81,330.568,334.978,327.848};
+float N1S_aa_cent4s_10[nfitvars] = {307.809,335.407,290.241,290.592,290.381};
+float N1S_aa_cent4s_20[nfitvars] = {496.635,532.844,495.289,491.662,492.975};
+float N1S_aa_cent4s_30[nfitvars] = {326.634,326.302,340.044,321.897,322.836};
+float N1S_aa_cent4s_40[nfitvars] = {235.313,230.112,237.079,238.891,239.932};
+float N1S_aa_cent4s_50[nfitvars] = {107.31,108.634,102.935,105.68,102.402};
+float N1S_aa_cent4s_100[nfitvars] = {173.995,180.813,155.805,156.081,154.809};
 float N2S_aa_cents_5[nfitvars] = {48.4975,43.0919,33.6128,33.8641,32.8193};
 float N2S_aa_cents_10[nfitvars] = {5.94285,8.63158,-0.318017,0.914677,0.190994};
 float N2S_aa_cents_20[nfitvars] = {43.2279,43.5586,35.9874,35.2762,35.3462};
 float N2S_aa_cents_30[nfitvars] = {33.9329,33.216,37.4242,33.6887,35.0151};
 float N2S_aa_cents_40[nfitvars] = {43.3892,40.9809,43.8794,44.6109,44.818};
 float N2S_aa_cents_50[nfitvars] = {23.5914,27.0468,23.9,24.106,23.8406};
-float N2S_aa_cents_100[nfitvars] = {};
+float N2S_aa_cents_100[nfitvars] = {19.9305,18.3691,15.0302,13.9148,14.8112};
 float N1B_pp_pt3p5s_2p5[nbkgdvars] = {1496.56,1496.98};
 float N1B_pp_pt3p5s_5[nbkgdvars] = {1411.8,1414.98};
 float N1B_pp_pt3p5s_8[nbkgdvars] = {960.313,962.119};
@@ -985,12 +1171,12 @@ float N2B_pp_pt4s_2p5[nbkgdvars] = {359.307,353.335};
 float N2B_pp_pt4s_5[nbkgdvars] = {266.619,262.225};
 float N2B_pp_pt4s_8[nbkgdvars] = {237.328,237.889};
 float N2B_pp_pt4s_12[nbkgdvars] = {188.656,188.804};
-float N2B_pp_pt4s_20[nbkgdvars] = {112.203,112.903};
+float N2B_pp_pt4s_20[nbkgdvars] = {113.068,114.023};
 float N3B_pp_pt4s_2p5[nbkgdvars] = {160.93,169.281};
 float N3B_pp_pt4s_5[nbkgdvars] = {177.804,179.161};
 float N3B_pp_pt4s_8[nbkgdvars] = {109.725,110.124};
 float N3B_pp_pt4s_12[nbkgdvars] = {83.8668,84.1256};
-float N3B_pp_pt4s_20[nbkgdvars] = {67.9136,68.656};
+float N3B_pp_pt4s_20[nbkgdvars] = {67.0865,68.1083};
 float N1B_pp_rap3p5s_0p4[nbkgdvars] = {1031.25,1037.63};
 float N1B_pp_rap3p5s_0p8[nbkgdvars] = {1117.05,1114.86};
 float N1B_pp_rap3p5s_1p2[nbkgdvars] = {953.639,956.322};
@@ -1003,6 +1189,11 @@ float N2B_pp_rap4s_1p2[nbkgdvars] = {215.534,223.55};
 float N2B_pp_rap4s_1p6[nbkgdvars] = {214.694,209.404};
 float N2B_pp_rap4s_2p0[nbkgdvars] = {173.098,176.027};
 float N2B_pp_rap4s_2p4[nbkgdvars] = {45.9987,43.8763};
+float N2B_ppLarge_pt4s_6p5[nbkgdvars] = {554.665,554.34};
+float N2B_ppLarge_pt4s_10[nbkgdvars] = {400.121,412.06};
+float N2B_ppLarge_pt4s_20[nbkgdvars] = {113.068,114.023};
+float N2B_ppLarge_rap4s_1p2[nbkgdvars] = {683.111,690.348};
+float N2B_ppLarge_rap4s_2p4[nbkgdvars] = {429.637,429.517};
 float N3B_pp_rap4s_0p4[nbkgdvars] = {115.068,115.21};
 float N3B_pp_rap4s_0p8[nbkgdvars] = {128.432,128.471};
 float N3B_pp_rap4s_1p2[nbkgdvars] = {129.472,136.97};
@@ -1013,30 +1204,81 @@ float N1B_aa_pt3p5s_2p5[nbkgdvars] = {717.243,712.649};
 float N1B_aa_pt3p5s_5[nbkgdvars] = {699.164,703.814};
 float N1B_aa_pt3p5s_8[nbkgdvars] = {511.1,517.071};
 float N1B_aa_pt3p5s_12[nbkgdvars] = {350.612,350.879};
-float N1B_aa_pt3p5s_20[nbkgdvars] = {350.612,350.879};
-float N2B_aa_pt4s_6p5[nbkgdvars] = {};
-float N2B_aa_pt4s_10[nbkgdvars] = {};
-float N2B_aa_pt4s_20[nbkgdvars] = {};
+float N1B_aa_pt3p5s_20[nbkgdvars] = {183.499,186.288};
+float N2B_aa_pt4s_6p5[nbkgdvars] = {42.2573,49.5419};
+float N2B_aa_pt4s_10[nbkgdvars] = {32.6167,32.1922};
+float N2B_aa_pt4s_20[nbkgdvars] = {23.6618,24.1607};
 float N1B_aa_rap3p5s_0p4[nbkgdvars] = {482.485,482.742};
 float N1B_aa_rap3p5s_0p8[nbkgdvars] = {497.149,502.336};
 float N1B_aa_rap3p5s_1p2[nbkgdvars] = {570.466,570.447};
 float N1B_aa_rap3p5s_1p6[nbkgdvars] = {545.56,549.237};
 float N1B_aa_rap3p5s_2p0[nbkgdvars] = {485.341,360.041};
 float N1B_aa_rap3p5s_2p4[nbkgdvars] = {122.955,117.653};
-float N2B_aa_rap4s_1p2[nbkgdvars] = {};
-float N2B_aa_rap4s_2p4[nbkgdvars] = {};
-float N1B_aa_cents_5[nbkgdvars] = {};
-float N1B_aa_cents_10[nbkgdvars] = {};
-float N1B_aa_cents_20[nbkgdvars] = {};
-float N1B_aa_cents_30[nbkgdvars] = {};
-float N1B_aa_cents_40[nbkgdvars] = {};
-float N1B_aa_cents_50[nbkgdvars] = {};
-float N1B_aa_cents_70[nbkgdvars] = {};
-float N1B_aa_cents_100[nbkgdvars] = {};
-float N2B_aa_cents_5[nbkgdvars] = {};
-float N2B_aa_cents_10[nbkgdvars] = {};
-float N2B_aa_cents_20[nbkgdvars] = {};
-float N2B_aa_cents_30[nbkgdvars] = {};
-float N2B_aa_cents_40[nbkgdvars] = {};
-float N2B_aa_cents_50[nbkgdvars] = {};
-float N2B_aa_cents_100[nbkgdvars] = {};
+float N2B_aa_rap4s_1p2[nbkgdvars] = {81.3806,75.6841};
+float N2B_aa_rap4s_2p4[nbkgdvars] = {36.4456,36.4568};
+float N1B_aa_cents_5[nbkgdvars] = {412.968,412.191};
+float N1B_aa_cents_10[nbkgdvars] = {403.836,390.309};
+float N1B_aa_cents_20[nbkgdvars] = {626.107,626.829};
+float N1B_aa_cents_30[nbkgdvars] = {428.4,427.931};
+float N1B_aa_cents_40[nbkgdvars] = {286.414,286.169};
+float N1B_aa_cents_50[nbkgdvars] = {166.421,166.228};
+float N1B_aa_cents_70[nbkgdvars] = {174.525,173.553};
+float N1B_aa_cents_100[nbkgdvars] = {44.9057,46.1147};
+float N1B_aa_cent4s_5[nbkgdvars] = {298.055,289.612};
+float N1B_aa_cent4s_10[nbkgdvars] = {276.38,276.636};
+float N1B_aa_cent4s_20[nbkgdvars] = {405.779,418.488};
+float N1B_aa_cent4s_30[nbkgdvars] = {299.438,304.2};
+float N1B_aa_cent4s_40[nbkgdvars] = {209.46,208.732};
+float N1B_aa_cent4s_50[nbkgdvars] = {83.1462,82.8723};
+float N1B_aa_cent4s_100[nbkgdvars] = {148.878,148.852};
+float N2B_aa_cents_5[nbkgdvars] = {25.4924,31.6959};
+float N2B_aa_cents_10[nbkgdvars] = {1.42981,1.83586};
+float N2B_aa_cents_20[nbkgdvars] = {7.3292,15.6628};
+float N2B_aa_cents_30[nbkgdvars] = {19.618,25.9317};
+float N2B_aa_cents_40[nbkgdvars] = {32.1346,31.6678};
+float N2B_aa_cents_50[nbkgdvars] = {16.8286,17.0657};
+float N2B_aa_cents_100[nbkgdvars] = {14.9641,15.3213};
+float N1S_pp_pt4s_2p5[nfitvars] = {916.276,946.452,961.031,954.902,960.704};
+float N1S_pp_pt4s_5[nfitvars] = {778.599,802.632,810.006,808.398,814.572};
+float N1S_pp_pt4s_8[nfitvars] = {729.648,732.577,736.513,740.007,736.769};
+float N1S_pp_pt4s_12[nfitvars] = {539.404,536.766,539.371,544.269,535.698};
+float N1S_pp_pt4s_20[nfitvars] = {306.672,309.627,305.033,305.244,305.139};
+float N1B_pp_pt4s_2p5[nbkgdvars] = {1029.78,993.426};
+float N1B_pp_pt4s_5[nbkgdvars] = {813.107,800.308};
+float N1B_pp_pt4s_8[nbkgdvars] = {706.741,707.492};
+float N1B_pp_pt4s_12[nbkgdvars] = {516.232,515.74};
+float N1B_pp_pt4s_20[nbkgdvars] = {302.26,303.173};
+float N1S_pp_rap4s_0p4[nfitvars] = {767.726,755.71,781.722,781.911,777.217};
+float N1S_pp_rap4s_0p8[nfitvars] = {815.039,785.346,823.017,800.125,847.693};
+float N1S_pp_rap4s_1p2[nfitvars] = {669.44,687.62,696.703,694.8,697.139};
+float N1S_pp_rap4s_1p6[nfitvars] = {615.176,596.787,621.276,629.761,617.232};
+float N1S_pp_rap4s_2p0[nfitvars] = {424.005,426.804,467.725,434.189,481.514};
+float N1S_pp_rap4s_2p4[nfitvars] = {170.064,176.683,172.312,171.547,173.448};
+float N1B_pp_rap4s_0p4[nbkgdvars] = {753.091,754.202};
+float N1B_pp_rap4s_0p8[nbkgdvars] = {797.293,797.277};
+float N1B_pp_rap4s_1p2[nbkgdvars] = {657.955,660.876};
+float N1B_pp_rap4s_1p6[nbkgdvars] = {582.799,576.415};
+float N1B_pp_rap4s_2p0[nbkgdvars] = {423.501,426.154};
+float N1B_pp_rap4s_2p4[nbkgdvars] = {173.245,168.159};
+float N1S_aa_pt4s_2p5[nfitvars] = {430.166,443.247,420.696,411.079,411.803};
+float N1S_aa_pt4s_5[nfitvars] = {403.16,396.608,426.023,411.094,427.04};
+float N1S_aa_pt4s_8[nfitvars] = {378.56,448.12,323.332,315.504,331.11};
+float N1S_aa_pt4s_12[nfitvars] = {293.283,290.63,307.638,300.843,305.861};
+float N1S_aa_pt4s_20[nfitvars] = {168.534,168.108,163.857,164.872,164.913};
+float N1B_aa_pt4s_2p5[nbkgdvars] = {};
+float N1B_aa_pt4s_5[nbkgdvars] = {};
+float N1B_aa_pt4s_8[nbkgdvars] = {};
+float N1B_aa_pt4s_12[nbkgdvars] = {};
+float N1B_aa_pt4s_20[nbkgdvars] = {};
+float N1S_aa_rap4s_0p4[nfitvars] = {316.164,317.648,321.904,320.952,321.194};
+float N1S_aa_rap4s_0p8[nfitvars] = {380.518,375.37,347.504,358.631,351.642};
+float N1S_aa_rap4s_1p2[nfitvars] = {400.666,407.753,413.893,429.361,415.381};
+float N1S_aa_rap4s_1p6[nfitvars] = {472.662,373.964,418.847,398.337,417.228};
+float N1S_aa_rap4s_2p0[nfitvars] = {547.039,265.864,242.737,249.501,276.177};
+float N1S_aa_rap4s_2p4[nfitvars] = {129.77,91.0013,88.711,86.6222,82.4358};
+float N1B_aa_rap4s_0p4[nbkgdvars] = {};
+float N1B_aa_rap4s_0p8[nbkgdvars] = {};
+float N1B_aa_rap4s_1p2[nbkgdvars] = {};
+float N1B_aa_rap4s_1p6[nbkgdvars] = {};
+float N1B_aa_rap4s_2p0[nbkgdvars] = {};
+float N1B_aa_rap4s_2p4[nbkgdvars] = {};
