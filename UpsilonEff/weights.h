@@ -83,3 +83,36 @@ float NcollMean2S[40]=
    ,0.198*2.41358
    ,0.198*2.10707
    ,0.198*1.76851};
+
+  int Nhits = 10;
+  int NPxlLayers = 0;
+  double InnerChi = 4.0;
+  double Dxy = 3;
+  double Dz = 15;
+  double GlobalChi = 10;
+  int NMuonhits = 0;
+  double Prob = 0.01;
+
+/* or equivalently, */
+
+/* if(muPos_found > 10 && */
+/*             muPos_pixeLayers > 0 && */
+/*             muPos_nchi2In < 4.0 && */
+/*             TMath::Abs(muPos_dxy) < 3 && */
+/*             TMath::Abs(muPos_dz) < 15 && muPos_nchi2Gl < 20 && */
+/*             muPos_arbitrated==1 && */
+/*             muPos_tracker==1){ */
+/*           PosPass=1; */
+/*         } */
+
+
+/*         if(muNeg_found > 10 && */
+/*             muNeg_pixeLayers > 0 && */
+/*             muNeg_nchi2In < 4.0 && */
+/*             TMath::Abs(muNeg_dxy) < 3 && */
+/*             TMath::Abs(muNeg_dz) < 15 && */
+/*             muNeg_nchi2Gl < 20 && */
+/*             muNeg_arbitrated==1 && */
+/*             muNeg_tracker==1){ */
+/*           NegPass=1; */
+/*         } */
