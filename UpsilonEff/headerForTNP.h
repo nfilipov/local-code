@@ -1,5 +1,5 @@
 // pbpb midrap
-double alpha_pbpb_midrap[101]={0.9988,
+double alpha_pbpb_midrap[101]= {0.9555,//0.9988,
 			       0.9632,
 			       0.9563,
 			       0.9547,
@@ -102,7 +102,7 @@ double alpha_pbpb_midrap[101]={0.9988,
 			       0.9582};
 
 
-double mu_data_pbpb_midrap[101]={1.3220,
+double mu_data_pbpb_midrap[101]={1.3240,//1.3220,
 				 1.2306,
 				 1.4503,
 				 1.2617,
@@ -205,7 +205,7 @@ double mu_data_pbpb_midrap[101]={1.3220,
 				 1.2334};
 
 
-double sigma_data_pbpb_midrap[101]={2.6880
+double sigma_data_pbpb_midrap[101]={2.5683 //2.6880
 				    ,2.7423
 				    ,2.3972
 				    ,2.5830
@@ -310,7 +310,7 @@ double sigma_data_pbpb_midrap[101]={2.6880
 
 //pbpb fwd
 //nominal (0.8299*TMath::Erf((pt-1.2785)/1.8833))/(0.7810*TMath::Erf((pt-1.3609)/2.1231))
-double alpha_pbpb_fwdrap[101]= {0.8299/0.7810,
+double alpha_pbpb_fwdrap[101]= {0.8335,//0.8299/0.7810,
 				1.0400,
 				0.8874,
 				0.8503,
@@ -412,9 +412,8 @@ double alpha_pbpb_fwdrap[101]= {0.8299/0.7810,
 				0.7536,
 				0.8790};
 
-double mu_data_pbpb_fwdrap[101]={
-  -5.0974,
-  1.3676,
+double mu_data_pbpb_fwdrap[101]={ 1.247, //-5.0974,
+				  1.3676,
   1.2919,
   1.5344,
   1.3039,
@@ -513,7 +512,7 @@ double mu_data_pbpb_fwdrap[101]={
   -0.1310,
   1.5839,
   0.0755 };
-double sigma_data_pbpb_fwdrap[101]={12.4195,
+double sigma_data_pbpb_fwdrap[101]={1.9782,//12.4195,
 				    1.9868,
 				    1.7771,
 				    1.3019,
@@ -615,7 +614,7 @@ double sigma_data_pbpb_fwdrap[101]={12.4195,
 				    3.4974};
 
 //pp mid
-double alpha_pp_midrap[101]={0.998474,
+double alpha_pp_midrap[101]={0.9588,//0.998474, old.
 			     0.9615,
 			     0.9618,
 			     0.9576,
@@ -717,10 +716,10 @@ double alpha_pp_midrap[101]={0.998474,
 			     0.9562,
 			     0.9614};
 
-double mu_data_pp_midrap[101]={ 1.6355,
+double mu_data_pp_midrap[101]={2.0009,//1.6355,
 				1.9636,
-  1.9621,
-  1.9917,
+				1.9621,
+				1.9917,
   2.0045,
   1.9856,
   2.0129,
@@ -819,7 +818,7 @@ double mu_data_pp_midrap[101]={ 1.6355,
   1.9719,
   1.9817};
 
-double sigma_data_pp_midrap[101]={0.7979,
+double sigma_data_pp_midrap[101]={1.8998,//0.7979,
 				  1.9542,
 				  1.9488,
 				  1.9064,
@@ -922,9 +921,9 @@ double sigma_data_pp_midrap[101]={0.7979,
 				  1.9423};
 
 //pp fwd
- double alpha_pp_fwdrap[101]={0.7788,
-				   0.7942,
-				  0.7966,
+double alpha_pp_fwdrap[101]={0.7897,//0.7788,
+			     0.7942,
+			     0.7966,
 				  0.7798,
 				  0.7859,
 				  0.7832,
@@ -1024,7 +1023,7 @@ double sigma_data_pp_midrap[101]={0.7979,
 				  0.7743,
 				  0.7947};
 
-double mu_data_pp_fwdrap[101]={1.1903,
+double mu_data_pp_fwdrap[101]={0.7162,//1.1903,
 			       0.4544,
 				0.6032,
 				0.8401,
@@ -1126,7 +1125,7 @@ double mu_data_pp_fwdrap[101]={1.1903,
 			       0.7472,
 			       0.5715};
 
-double sigma_data_pp_fwdrap[101]={1.9888
+double sigma_data_pp_fwdrap[101]={2.6261   //1.9888
 				  ,2.9516
 				  ,2.7645
 				  ,2.4172

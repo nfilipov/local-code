@@ -13,41 +13,41 @@
    if(par[5]>0){ //doing pbpb first,
      if(par[4]<1) { // barrel,
        if(par[3]<1) { // nominal 
-	 f = (par[0]*TMath::Erf((xx-par[1])/par[2]))/(TMath::Erf((xx-1.7960)/2.5160));
+	 f = (par[0]*TMath::Erf((xx-par[1])/par[2]))/ (0.9576*TMath::Erf((xx-1.7883)/2.6583)); //(TMath::Erf((xx-1.7960)/2.5160)); //OK!
        }
        if(par[3]>0){ // variations
-       	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2])/(0.9576*TMath::Erf((xx-1.7883)/2.6583)));  /// 
+       	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2])/(0.9576*TMath::Erf((xx-1.7883)/2.6583)));  ///OK! 
        }
      }
      if(par[4]>0){// endcap,
        if(par[3]<1) { // nominal case
-     	 f = (par[0]*TMath::Erf((xx-par[1])/par[2]))/(0.7810*TMath::Erf((xx-1.3609)/2.1231));
+     	 f = (par[0]*TMath::Erf((xx-par[1])/par[2]))/(0.7948*TMath::Erf((xx-1.3091)/2.2783)); //(0.7810*TMath::Erf((xx-1.3609)/2.1231));
        }
        if(par[3]>0){ // variations
-       	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2])/(0.7810*TMath::Erf((xx-1.3609)/2.1231)));  /// 
+       	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2])/(0.7810*TMath::Erf((xx-1.3609)/2.1231))); ///  (0.7948*TMath::Erf((xx-1.3091)/2.2783))); //  should check why the variations had this numerator.
        }
      }
    }
    if(par[5]<1){ //doing pp now,
      if(par[4]<1) { // barrel,
        if(par[3]<1) { // nominal 
-	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2]))/(TMath::Erf((xx-1.7960)/2.5160));
+	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2]))/(0.9604*TMath::Erf((xx-2.0586)/2.1567));// (TMath::Erf((xx-1.7960)/2.5160)); //OK!
        }
        if(par[3]>0){ // variations
-       	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2])/ (0.9604*TMath::Erf((xx-2.0583)/2.1573)));  /// 
+       	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2]))/ (0.9604*TMath::Erf((xx-2.0583)/2.1573));  /// new one matches what dongho had in the variations.
        }
      }
      if(par[4]>0){// endcap,
        if(par[3]<1) { // nominal case
-     	 f = (par[0]*TMath::Erf((xx-par[1])/par[2]))/(0.7364*TMath::Erf((xx-1.2538)/2.2530));
+     	 f = (par[0]*TMath::Erf((xx-par[1])/par[2]))/(0.7364*TMath::Erf((x-1.2149)/2.3352));//(0.7364*TMath::Erf((xx-1.2538)/2.2530));  not a big difference, but now it matches what we were provided with!
        }
        if(par[3]>0){ // variations
-       	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2])/ (0.7364*TMath::Erf((xx-1.2149)/2.3352)));  /// 
+       	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2])/ (0.7364*TMath::Erf((xx-1.2149)/2.3352)));  /// (0.7364*TMath::Erf((x-1.2149)/2.3352))
        }
      }
    }
    return f;
-
+   
    //pbpb midrap
    //
    //
@@ -126,7 +126,7 @@ void plotAllFunctions()
   if(!doOnlyNumerator){ f1->GetYaxis()->SetRangeUser(0.8,1.5); }
   else if(doOnlyNumerator){   f1->GetYaxis()->SetRangeUser(0.0,1.5); }
   f1->Draw();
-  std::cout << alpha_pbpb_midrap[j] <<"*TMath::Erf((x-"<< mu_data_pbpb_midrap[j] <<"/"<<sigma_data_pbpb_midrap[j]<<")) / (1.0000*TMath::Erf((x-1.7960)/2.5160))"<<std::endl;
+  std::cout << alpha_pbpb_midrap[j] <<"*TMath::Erf((x-"<< mu_data_pbpb_midrap[j] <<")/"<<sigma_data_pbpb_midrap[j]<<") / (1.0000*TMath::Erf((x-1.7960)/2.5160))"<<std::endl;
   
   for(j=1;j< 101;j++){
     //reminder:
@@ -212,8 +212,8 @@ void plotAllFunctions()
   }
   leg2->Draw();
 
-  if(!doOnlyNumerator){  cBarrel_pbpb->SaveAs("~/Desktop/Grenelle/TNP_pbpb_100variations.pdf");}
-  else{ cBarrel_pbpb->SaveAs("~/Desktop/Grenelle/numerator_variations.pdf");}
+  if(!doOnlyNumerator){  cBarrel_pbpb->SaveAs("~/Desktop/Grenelle/TNP_pbpb_100variations_new.pdf");}
+  else{ cBarrel_pbpb->SaveAs("~/Desktop/Grenelle/numerator_variations_new.pdf");}
 
   // /// ...the crunchy ones... // ///
   cout << "OMG THIS IS SO PERVERTED!" << endl;
@@ -282,7 +282,7 @@ void plotAllFunctions()
   if(!doOnlyNumerator){   g2->GetYaxis()->SetRangeUser(0.8,1.5); }
   else if(doOnlyNumerator){   g2->GetYaxis()->SetRangeUser(0.0,1.5); }
   g2->Draw();
-  //  std::cout << alpha_pp_fwdrap[j] <<"*TMath::Erf((x-"<< mu_data_pp_fwdrap[j] <<"/"<<sigma_data_pp_fwdrap[j]<<")) / (1.0000*TMath::Erf((x-1.7960)/2.5160))"<<std::endl;
+    std::cout << alpha_pp_fwdrap[j] <<"*TMath::Erf((x-"<< mu_data_pp_fwdrap[j] <<"/"<<sigma_data_pp_fwdrap[j]<<")) / pp fwd numerator."<<std::endl;
   
   for(j=1;j< 101;j++){
     //reminder:
@@ -322,8 +322,8 @@ void plotAllFunctions()
     leg2->Draw();
     
      if(!doOnlyNumerator)
-       {    cBarrel_pp->SaveAs("~/Desktop/Grenelle/TNP_pp_100variations.pdf");}
-     else{	 cBarrel_pp->SaveAs("~/Desktop/Grenelle/numerator_variations_pp.pdf");}
+       {    cBarrel_pp->SaveAs("~/Desktop/Grenelle/TNP_pp_100variations_new.pdf");}
+     else{	 cBarrel_pp->SaveAs("~/Desktop/Grenelle/numerator_variations_pp_new.pdf");}
     cout << "OMG THIS IS SO PERVERTED!" << endl;
  
 }
