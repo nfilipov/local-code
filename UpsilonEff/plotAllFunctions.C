@@ -39,10 +39,10 @@
      }
      if(par[4]>0){// endcap,
        if(par[3]<1) { // nominal case
-     	 f = (par[0]*TMath::Erf((xx-par[1])/par[2]))/(0.7364*TMath::Erf((x-1.2149)/2.3352));//(0.7364*TMath::Erf((xx-1.2538)/2.2530));  not a big difference, but now it matches what we were provided with!
+     	 f = (par[0]*TMath::Erf((xx-par[1])/par[2]))/(0.7364*TMath::Erf((x-1.2149)/2.3352));//(0.7364*TMath::Erf((xx-1.2538)/2.2530)); this is the old one...
        }
        if(par[3]>0){ // variations
-       	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2])/ (0.7364*TMath::Erf((xx-1.2149)/2.3352)));  /// (0.7364*TMath::Erf((x-1.2149)/2.3352))
+       	 f =   (par[0]*TMath::Erf((xx-par[1])/par[2])/ (0.7364*TMath::Erf((xx-1.2149)/2.3352)));  ///
        }
      }
    }
@@ -165,10 +165,9 @@ void plotAllFunctions()
   //endcap pbpb:  (0.8299*TMath::Erf((pt-1.2785)/1.8833))/(0.7810*TMath::Erf((pt-1.3609)/2.1231))
   cBarrel_pbpb->cd(2);
   endcap=1;
-  cout << "MOFO DOING ENDCAP NOW" << endl;
   TF1 *f2 = new TF1("myFunc",myFunc,0,20,6);
   if (doOnlyNumerator){ f2= new TF1("myFunk",myNumerator,0,20,6);}
-  j=0; // reset, mofo!
+  j=0; // reset!
   f2->SetParameters(alpha_pbpb_fwdrap[j],mu_data_pbpb_fwdrap[j],sigma_data_pbpb_fwdrap[j],j,endcap,pbpb);
   f2->SetRange(0,20);
   if(!doOnlyNumerator){   f2->GetYaxis()->SetRangeUser(0.8,1.5); }
@@ -215,8 +214,8 @@ void plotAllFunctions()
   if(!doOnlyNumerator){  cBarrel_pbpb->SaveAs("~/Desktop/Grenelle/TNP_pbpb_100variations_new.pdf");}
   else{ cBarrel_pbpb->SaveAs("~/Desktop/Grenelle/numerator_variations_new.pdf");}
 
-  // /// ...the crunchy ones... // ///
-  cout << "OMG THIS IS SO PERVERTED!" << endl;
+ 
+ 
   pbpb=0;
   endcap=0;
   j=0;
@@ -273,10 +272,10 @@ void plotAllFunctions()
   //endcap pp:  (0.8299*TMath::Erf((pt-1.2785)/1.8833))/(0.7810*TMath::Erf((pt-1.3609)/2.1231))
   cBarrel_pp->cd(2);
   endcap=1;
-  cout << "MOFO DOING ENDCAP NOW" << endl;
+  cout << " DOING ENDCAP NOW" << endl;
   TF1 *g2 = new TF1("myFunc",myFunc,0,20,6);
   if (doOnlyNumerator){ g2= new TF1("myFunk",myNumerator,0,20,6);}
-  j=0; // reset, mofo!
+  j=0; // reset!
   g2->SetParameters(alpha_pp_fwdrap[j],mu_data_pp_fwdrap[j],sigma_data_pp_fwdrap[j],j,endcap,pbpb);
   g2->SetRange(0,20);
   if(!doOnlyNumerator){   g2->GetYaxis()->SetRangeUser(0.8,1.5); }
@@ -324,7 +323,6 @@ void plotAllFunctions()
      if(!doOnlyNumerator)
        {    cBarrel_pp->SaveAs("~/Desktop/Grenelle/TNP_pp_100variations_new.pdf");}
      else{	 cBarrel_pp->SaveAs("~/Desktop/Grenelle/numerator_variations_pp_new.pdf");}
-    cout << "OMG THIS IS SO PERVERTED!" << endl;
  
 }
 
